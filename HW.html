@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyFlow</title>
+    <script>document.documentElement.classList.add('auth-pending')</script>
+    <link rel="stylesheet" href="HW.css">
+</head>
+<body>
+    <header class="page-header">
+        <h1 id="Header2">StudyFlow</h1>
+        <h1 id="clock"></h1>
+    </header>
+    <script src="clock.js"></script>
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">หน้าหลัก</a></li>
+            <li><a href="HW.html">จัดการบ้าน</a></li>
+            <li><a href="Settings.html">ตั้งค่า</a></li>
+        </ul>
+        
+    </nav>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="HW.html">เพิ่มการบ้าน</a></li>
+            <li><a href="Score.html">เพิ่มคะแนนสอบ</a></li>
+            <li><a href="ViewHW.html">ดูการบ้าน</a></li>
+        </ul>
+    </nav>
+    <style>
+        .navbar ul {
+            display: flex;
+            justify-content: left;
+            list-style-type: none;
+            padding: 0;
+        }
+        .navbar{
+            font-family: "THSarabun", sans-serif;
+        }
+    </style>
+
+    <main>
+        <form id="homework-form" action="add_hw.php" method="POST">
+            <input type="hidden" name="csrf" value="">
+            <label for="hw_name">ชื่อการบ้าน*:</label>
+            <input type="text" id="hw_name" name="hw_name" required><br><br>
+
+            <label for="hw_type">ประเภท*:</label>
+            <select id="hw_type" name="hw_type" required>
+                <option value="" disabled selected>เลือกประเภทการบ้าน</option>
+                <option value="การบ้าน">การบ้าน</option>
+                <option value="งานกลุ่ม">งานกลุ่ม</option>
+                <option value="สอบ">สอบ</option>
+                <option value="รายงาน">รายงาน</option>
+                <option value="อื่นๆ">อื่นๆ</option>
+            </select><br><br>
+
+            <label for="subject">รายวิชา*:</label>
+            <select id="subject" name="subject" required>
+                <option value="" disabled selected>เลือกรายวิชา</option>
+                <option value="คณิตศาสตร์พื้นฐาน">คณิตศาสตร์พื้นฐาน ค31102</option>
+                <option value="คณิตศาสตร์เพิ่มเติม">คณิตศาสตร์เพิ่มเติม ค31202</option>
+                <option value="ภาษาไทยพื้นฐาน">ภาษาไทยพื้นฐาน ท31102</option>
+                <option value="การเขียน">การเขียน ท30204</option>
+                <option value="ภาษาอังกฤษพื้นฐาน">ภาษาอังกฤษพื้นฐาน อ31201</option>
+                <option value="ภาษาอังกฤษเพื่อการสื่อสาร">ภาษาอังกฤษเพื่อการสื่อสาร อ31214</option>
+                <option value="ภาษาอังกฤษในชีวิตประจำวัน">ภาษาอังกฤษในชีวิตประจำวัน อ31210</option>
+                <option value="วิทยาศาสตร์">วิทยาศาสตร์ ว30121</option>
+                <option value="สังคมศึกษา">สังคมศึกษา ส31103</option>
+                <option value="ประวัติศาสตร์">ประวัติศาสตร์ ส31104</option>
+                <option value="นาฎศิลป์">นาฎศิลป์ ศ31102</option>
+                <option value="การบัญชี">การบัญชี ง31282</option>
+                <option value="การออกแบบ">การออกแบบ ว31287</option>
+                <option value="ภาษาจีน">ภาษาจีน จ31204</option>
+                <option value="อื่นๆ">อื่นๆ</option>
+            </select><br><br>
+
+            <label for="due_date">วันครบกำหนด:</label>
+            <input type="date" id="due_date" name="due_date"><br><br>
+
+            <label for="notes" id="notes-label">โน้ตเพิ่มเติม:</label>
+            <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br><br>
+
+            <input type="submit" value="เพิ่มการบ้าน" style="background-color: blueviolet; border-color: darkblue;">
+        </form>
+        <p>(* หมายถึงข้อมูลที่จำเป็นต้องกรอก)</p>
+    </main>
+    <script src="auth-guard.js" defer></script>
+</body>
+</html>

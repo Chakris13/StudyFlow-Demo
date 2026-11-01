@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - StudyFlow</title>
+    <link rel="stylesheet" href="HW.css">
+</head>
+<body>
+    <h1 id="Header">StudyFlow</h1>
+    <main class="login-main">
+        <section class="login-card">
+            <h2>เข้าสู่ระบบ StudyFlow</h2>
+            <p id="login-status" role="status" aria-live="polite"></p>
+            <form id="login-form">
+                <label for="identifier">รหัสนักเรียน / Email</label>
+                <input type="text" id="identifier" name="identifier" autocomplete="username" required>
+
+                <label for="password">รหัสผ่าน</label>
+                <input type="password" id="password" name="password" autocomplete="current-password" required>
+
+                <button type="submit">เข้าสู่ระบบ</button>
+                <button type="button" id="register-button">ลงทะเบียน</button>
+                <button type="button" id="guest-button">ลงทะเบียนแบบไม่ระบุตัวตน</button>
+            </form>
+            <p class="login-hint">การลงทะเบียนต้องใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร บัญชีไม่ระบุตัวตนจะอยู่ในเซสชันของเบราว์เซอร์นี้เท่านั้น</p>
+        </section>
+    </main>
+    <script src="login.js"></script>
+</body>
+</html>

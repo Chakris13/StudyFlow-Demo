@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyFlow</title>
+    <script>document.documentElement.classList.add('auth-pending')</script>
+    <link rel="stylesheet" href="HW.css">
+    <script src="auth-guard.js" defer></script>
+</head>
+<body>
+    <h1 id="Header">StudyFlow</h1>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">หน้าหลัก</a></li>
+            <li><a href="HW.html">จัดการบ้าน</a></li>
+            <li><a href="Settings.html">ตั้งค่า</a></li>
+        </ul>
+    </nav>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="HW.html">เพิ่มการบ้าน</a></li>
+            <li><a href="Score.html">เพิ่มคะแนนสอบ</a></li>
+            <li><a href="ViewHW.html">ดูการบ้าน</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2 style="margin-top: 0; margin-bottom: 0;">รายการการบ้าน</h2>
+        <p id="status-message" role="status" aria-live="polite"></p>
+        <div class="table-container">
+            <table id="homework-table" border="2">
+                <thead>
+                    <tr>
+                        <th align="center">ชื่อการบ้าน</th>
+                        <th align="center">ประเภท</th>
+                        <th align="center">รายวิชา</th>
+                        <th align="center">วันครบกำหนด</th>
+                        <th align="center">โน้ตเพิ่มเติม</th>
+                        <th align="center">เวลาบันทึก / เสร็จ / ส่ง</th>
+                        <th align="center">จัดการ</th>
+                    </tr>
+                </thead>
+                <tbody id="homework-list"></tbody>
+            </table>
+        </div>
+    </main>
+    <script>
+        const statusMessage = document.getElementById('status-message');
+        const homeworkList = document.getElementById('homework-list');
+
+        function formatTimestamp(timestamp) {
+            if (!timestamp) {
+                return '-';
+            }
+
+            const date = new Date(timestamp);
+            return Number.isNaN(date.getTime())
+                ? timestamp
+                : new Intl.DateTimeFormat(undefined, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short'
+                }).format(date);
+        }
+
+        if (new URLSearchParams(window.location.search).has('saved')) {
+            statusMessage.textContent = 'บันทึกการบ้านเรียบร้อยแล้ว';
+        }
+
+        function displayHomework(homework) {
+            if (!Array.isArray(homework)) {
+                throw new Error('ข้อมูลการบ้านไม่ถูกต้อง');
+            }
+
+            homeworkEntries = homework;
+            homeworkList.replaceChildren();
+
+            homework.forEach((item, index) => {
+                const row = document.createElement('tr');
+                [item.hw_name, item.hw_type, item.subject, item.due_date, item.notes].forEach((value) => {
+                    const cell = document.createElement('td');
+                    cell.textContent = value || '';
+                    row.appendChild(cell);
+                });
+
+                const timestampCell = document.createElement('td');
+                timestampCell.className = 'homework-timestamps';
+                [
+                    ['เพิ่ม', item.created_at],
+                    ['เสร็จ', item.completed_at],
+                    ['ส่ง', item.submitted_at]
+                ].forEach(([label, timestamp]) => {
+                    const line = document.createElement('div');
+                    line.textContent = `${label}: ${formatTimestamp(timestamp)}`;
+                    timestampCell.appendChild(line);
+                });
+                row.appendChild(timestampCell);
+
+                const actionCell = document.createElement('td');
+                actionCell.className = 'homework-actions';
+
+                const progressButton = document.createElement('button');
+                progressButton.type = 'button';
+                progressButton.className = 'submit-button';
+                progressButton.textContent = item.submitted
+                    ? 'ส่งแล้ว'
+                    : (item.ready_to_submit || item.completed ? 'ส่ง' : 'เสร็จ');
+                progressButton.disabled = Boolean(item.submitted);
+                progressButton.addEventListener('click', () => {
+                    const action = item.ready_to_submit || item.completed
+                        ? 'submit_homework'
+                        : 'prepare_homework';
+                    updateHomework(index, action);
+                });
+
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.textContent = 'ลบ';
+                deleteButton.addEventListener('click', () => updateHomework(index, 'delete_homework'));
+                actionCell.append(progressButton, deleteButton);
+                row.appendChild(actionCell);
+                homeworkList.appendChild(row);
+            });
+
+            if (homework.length === 0) {
+                statusMessage.textContent = 'ยังไม่มีรายการการบ้าน';
+            }
+        }
+
+        async function updateHomework(index, action) {
+            try {
+                const response = await fetch('user_data.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': window.studyFlowSession.csrf
+                    },
+                    body: JSON.stringify({ action, index })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'ไม่สามารถอัปเดตรายการการบ้านได้');
+                }
+
+                displayHomework(result.homework);
+                if (action === 'delete_homework') {
+                    statusMessage.textContent = 'ลบการบ้านเรียบร้อยแล้ว';
+                } else if (action === 'prepare_homework') {
+                    statusMessage.textContent = 'ทำเครื่องหมายว่าเสร็จแล้ว กดส่งเมื่องานพร้อมส่ง';
+                } else {
+                    statusMessage.textContent = 'ส่งการบ้านเรียบร้อยแล้ว';
+                }
+            } catch (error) {
+                statusMessage.textContent = error.message;
+            }
+        }
+
+        if (window.location.protocol !== 'file:') {
+            fetch('user_data.php')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('ไม่สามารถโหลดรายการการบ้านได้');
+                    }
+                    return response.json();
+                })
+                .then((profile) => displayHomework(profile.homework))
+                .catch((error) => {
+                    statusMessage.textContent = error.message;
+                });
+        }
+    </script>
+</body>
+</html>

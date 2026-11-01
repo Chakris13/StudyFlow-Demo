@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyFlow</title>
+    <script>document.documentElement.classList.add('auth-pending')</script>
+    <link rel="stylesheet" href="HW.css">
+    <script src="auth-guard.js" defer></script>
+    <script src="report.js"></script>
+</head>
+<body>
+    <h1 id="Header">StudyFlow</h1>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">หน้าหลัก</a></li>
+            <li><a href="HW.html">จัดการบ้าน</a></li>
+            <li><a href="Settings.html">ตั้งค่า</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2>ยินดีต้อนรับสู่ StudyFlow</h2>
+        <p>StudyFlow เป็นเว็บไซต์ที่ช่วยให้คุณจัดการการบ้านและการเรียนของคุณได้อย่างมีประสิทธิภาพ</p>
+        <p>คุณสามารถเพิ่มรายการการบ้านของคุณและติดตามความคืบหน้าของคุณได้อย่างง่ายดาย</p>
+        <p>เริ่มต้นใช้งาน StudyFlow โดยการเลือกหน้า "จัดการบ้าน"</p>
+    </main>
+
+    <main>
+        <div class="report-summary">
+            <h2>สรุป</h2>
+            <div class="report">
+                <section class="report-item">
+                    <label for="hw_count">งานทั้งหมด</label>
+                    <h1 id="hw_count"></h1>
+                </section>
+                <section class="report-item2">
+                    <label for="finished">เสร็จแล้ว</label>
+                    <h1 id="finished"></h1>
+                </section>
+                <section class="report-item3">
+                    <label for="unsubmited">ยังไม่ส่ง</label>
+                    <h1 id="unsubmited"></h1>
+                </section>
+                <section class="report-item4">
+                    <label for="submited">ส่งแล้ว</label>
+                    <h1 id="submited"></h1>
+                </section>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

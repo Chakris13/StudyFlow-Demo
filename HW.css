@@ -1,0 +1,308 @@
+body{
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    background: linear-gradient(#0f0d59,#3b077e);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+html.auth-pending body{
+    visibility: hidden;
+}
+.server-required{
+    padding: 14px;
+    border: 1px solid #b54708;
+    border-radius: 6px;
+    background-color: #fff4e5;
+    color: #7a2e0e;
+}
+main{
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+}
+#Header{
+    padding-left: 20px;
+    align-content: end;
+}
+#Header2{
+    margin: 0;
+    padding-left: 20px;
+    align-content: end;
+}
+.page-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+}
+#clock{
+    margin: 0px;
+}
+.navbar ul{
+    list-style-type: none;
+    background-color: #101A35;
+    padding: 0px;
+    margin: 0;
+    overflow: hidden;
+}
+.navbar li a, .dropbtn{
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+}
+.navbar a{
+    text-decoration: none;
+    color: white;
+    display: block;
+    padding: 15px 20px;
+    text-align: center;
+}
+.navbar a:hover{
+    background-color: #242b3f;
+}
+.navbar li{
+    float: left;
+}
+table{
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #222;
+}
+#homework-table{
+    min-width: 1000px;
+    table-layout: fixed;
+    font: 25px TH Sarabun New, Arial, sans-serif;
+}
+#homework-table th:nth-child(5),
+#homework-table td:nth-child(5){
+    width: 32%;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+#homework-table th:nth-child(6),
+#homework-table td:nth-child(6){
+    width: 250px;
+}
+#homework-table th:nth-child(7),
+#homework-table td:nth-child(7){
+    width: 150px;
+}
+th, td{
+    border: 1px solid #495a6c;
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
+}
+th{
+    background-color: #495a6c;
+    color: white;
+}
+.table-container{
+    overflow-x: auto;
+}
+.homework-actions{
+    white-space: nowrap;
+}
+.homework-timestamps{
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+.homework-actions button{
+    margin: 0 4px 4px 0;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+.homework-actions button:disabled{
+    cursor: default;
+    opacity: 0.65;
+}
+.submit-button{
+    background-color: #a3af4c;
+    color: white;
+    border: none;
+}
+.submit-button:disabled{
+    background-color: #a5d6a7;
+    opacity: 0.65;
+}
+.login-main{
+    display: flex;
+    justify-content: center;
+}
+.login-card{
+    width: min(100%, 440px);
+    padding: 28px;
+    border-radius: 12px;
+    background-color: #fff;
+    color: #222;
+    box-sizing: border-box;
+}
+.login-card h2{
+    margin-top: 0;
+}
+.login-card form{
+    display: grid;
+    gap: 12px;
+}
+.login-card input{
+    padding: 10px;
+    font: inherit;
+}
+.login-card button{
+    padding: 10px;
+    font: inherit;
+    cursor: pointer;
+}
+.login-card button[type="submit"]{
+    color: white;
+    background-color: #495a6c;
+    border: 0;
+}
+.login-hint{
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.logout-button{
+    padding: 10px 14px;
+    cursor: pointer;
+}
+.account-card{
+    max-width: 560px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+    color: #222;
+}
+.account-card h3{
+    margin-top: 0;
+}
+.account-card dl{
+    display: grid;
+    grid-template-columns: minmax(160px, auto) 1fr;
+    gap: 12px;
+}
+.account-card dt{
+    font-weight: bold;
+}
+.account-card dd{
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+#hw_name{
+    margin-left: 30px;
+    width: 300px;
+}
+#hw_type{
+    margin-left: 50px;
+    width: 307px;
+}
+#subject{
+    margin-left: 50px;
+    width: 310px;
+}
+#due_date{
+    margin-left: 15px;
+    width: 303px;
+}
+#notes{
+    margin-left: 29px;
+    width: 302px;
+    height: 100px;
+}
+#homework-form input[type="submit"]{
+    padding: 10px 20px;
+    font-size: 2rem;
+    width: 423px;
+    cursor: pointer;
+}
+#status-message{
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+.report-summary{
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #0f0d59;
+    padding: 20px;
+    border-radius: 8px;
+}
+.report-summary h2{
+    margin-top: 0;
+}
+.report{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.report-item{
+    flex: 1 1 150px;
+    padding: 16px;
+    border-style: solid;
+    border-radius: 6px;
+    border-width: 3px;
+    border-color: #0b0944;
+    background-color: #220d68;
+    color: #ffffff;
+    text-align: center;
+}
+.report-item2{
+    flex: 1 1 150px;
+    padding: 16px;
+    border-style: solid;
+    border-radius: 6px;
+    border-width: 3px;
+    border-color: #130532;
+    background-color: #350f73;
+    color: #ffffff;
+    text-align: center;
+}
+.report-item3{
+    flex: 1 1 150px;
+    padding: 16px;
+    border-style: solid;
+    border-radius: 6px;
+    border-width: 3px;
+    border-color: #220633;
+    background-color: #4a0879;
+    color: #ffffff;
+    text-align: center;
+}
+.report-item4{
+    flex: 1 1 150px;
+    padding: 16px;
+    border-style: solid;
+    border-radius: 6px;
+    border-width: 3px;
+    border-color: #300640;
+    background-color: #650d82;
+    color: #ffffff;
+    text-align: center;
+}
+.report-item label{
+    display: block;
+}
+.report-item2 label{
+    display: block;
+}
+.report-item3 label{
+    display: block;
+}
+.report-item4 label{
+    display: block;
+}
+.report-item h1{
+    margin: 8px 0 0;
+}
+#test_date{
+    margin-left: 59px;
+    width: 303px;
+}
+.score{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 31px;
+}

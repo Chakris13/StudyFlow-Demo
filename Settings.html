@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyFlow</title>
+    <script>document.documentElement.classList.add('auth-pending')</script>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth-guard.js" defer></script>
+</head>
+<body>
+    <header class="page-header">
+        <h1 id="Header">StudyFlow</h1>
+        <h1 id="clock"></h1>
+    </header>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">หน้าหลัก</a></li>
+            <li><a href="HW.html">จัดการบ้าน</a></li>
+            <li><a href="Settings.html">ตั้งค่า</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h2>ตั้งค่า</h2>
+        <section class="account-card" aria-labelledby="account-heading">
+            <h3 id="account-heading">ข้อมูลบัญชี</h3>
+            <dl>
+                <dt>รหัสนักเรียน / Email</dt>
+                <dd id="account-identifier">กำลังโหลด...</dd>
+                <dt>ประเภทบัญชี</dt>
+                <dd id="account-type">กำลังโหลด...</dd>
+            </dl>
+            <button type="button" id="logout-button" class="logout-button">ออกจากระบบ</button>
+        </section>
+        <p id="settings-status" role="status" aria-live="polite"></p>
+    </main>
+    <script>
+        const settingsStatus = document.getElementById('settings-status');
+
+        Promise.all([
+            fetch('auth.php?action=session').then(async (response) => {
+                if (!response.ok) {
+                    throw new Error('ไม่สามารถโหลดข้อมูลบัญชีได้');
+                }
+                return response.json();
+            }),
+            fetch('user_data.php').then(async (response) => {
+                if (!response.ok) {
+                    throw new Error('ไม่สามารถโหลดการตั้งค่าของบัญชีได้');
+                }
+                return response.json();
+            })
+        ])
+            .then(([session, profile]) => {
+                document.getElementById('account-identifier').textContent = session.identifier;
+                document.getElementById('account-type').textContent = session.guest
+                    ? 'ไม่ระบุตัวตน (ผู้เยี่ยมชม)'
+                    : 'บัญชีที่ลงทะเบียน';
+                window.studyFlowSettings = profile.settings;
+            })
+            .catch((error) => {
+                settingsStatus.textContent = error.message;
+            });
+
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            try {
+                const sessionResponse = await fetch('auth.php?action=session');
+                if (!sessionResponse.ok) {
+                    throw new Error('ไม่สามารถตรวจสอบบัญชีก่อนออกจากระบบได้');
+                }
+                const session = await sessionResponse.json();
+                const response = await fetch('auth.php', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-Token': session.csrf },
+                    body: new URLSearchParams({ action: 'logout' })
+                });
+                if (!response.ok) {
+                    throw new Error('ออกจากระบบไม่สำเร็จ กรุณาลองใหม่');
+                }
+                window.location.replace('login.html');
+            } catch (error) {
+                settingsStatus.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>
