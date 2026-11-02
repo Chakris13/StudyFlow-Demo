@@ -20,10 +20,10 @@
                 <input type="password" id="password" name="password" autocomplete="current-password" required>
 
                 <button type="submit">เข้าสู่ระบบ</button>
-                <button type="button" id="register-button">ลงทะเบียน</button>
-                <button type="button" id="guest-button">ลงทะเบียนแบบไม่ระบุตัวตน</button>
+                <a class="auth-switch" id="register-link" href="register.html">ยังไม่มีบัญชี? ลงทะเบียน</a>
+                <button type="button" id="guest-button">เข้าใช้งานแบบผู้เยี่ยมชม</button>
             </form>
-            <p class="login-hint">การลงทะเบียนต้องใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร บัญชีผู้เยี่ยมชมจะผูกกับเบราว์เซอร์นี้เท่านั้น และไม่สามารถใช้บัญชีเดิมบนอุปกรณ์อื่นได้</p>
+            <p class="login-hint">บัญชีผู้เยี่ยมชมจะผูกกับเบราว์เซอร์นี้เท่านั้น และไม่สามารถใช้บัญชีเดิมบนอุปกรณ์อื่นได้</p>
         </section>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

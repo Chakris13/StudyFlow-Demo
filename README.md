@@ -28,14 +28,19 @@ The existing guest button uses Supabase **Anonymous Sign-Ins**. Enable it under 
 1. Extract this ZIP.
 2. Replace the files at the root of your existing `StudyFlow-Demo` GitHub repository with the extracted files. Keep the `supabase` folder.
 3. Commit and push to the same repository/branch used by GitHub Pages.
-4. Open the existing site URL. No hosting migration is required.
+4. Delete the old PHP backend files from the repository after uploading the replacement: `add_hw.php`, `auth.php`, `get_hw.php`, `homework_action.php`, `storage.php`, `user_data.php`, and `index.php`. GitHub Pages cannot execute PHP; leaving those files in the repository is unnecessary.
+5. Open the existing site URL. No hosting migration is required.
 
-The obsolete PHP files have been removed because GitHub Pages cannot execute PHP.
+The replacement ZIP intentionally omits the obsolete PHP backend files because GitHub Pages cannot execute PHP.
 
-## 4. First test
+## 4. Registration and first test
+
+- Open `register.html` to create a new account. The separate registration page validates the email, requires a password of at least 8 characters, and checks that the password confirmation matches.
+- The login page links to `register.html`, and the registration page links back to `login.html`.
+- With Email Confirmation enabled, users must click the confirmation link sent by Supabase before signing in.
 
 1. Open the GitHub Pages URL.
-2. Register using an email address and a password of at least 8 characters.
+2. Select the registration link or open `register.html`, then register using an email address and a password of at least 8 characters.
 3. Confirm the email if confirmation is enabled.
 4. Sign in, add homework, open View Homework, and test Complete → Submit and Delete.
 5. Create a second account and verify it cannot see the first account's homework.

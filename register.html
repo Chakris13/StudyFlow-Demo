@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f0d59">
+    <title>ลงทะเบียน - StudyFlow</title>
+    <link rel="stylesheet" href="HW.css">
+</head>
+<body>
+    <h1 id="Header">StudyFlow</h1>
+    <main class="login-main">
+        <section class="login-card" aria-labelledby="register-heading">
+            <h2 id="register-heading">สร้างบัญชี StudyFlow</h2>
+            <p>สมัครสมาชิกเพื่อบันทึกและเข้าถึงการบ้านของคุณได้จากทุกอุปกรณ์</p>
+            <p id="register-status" role="status" aria-live="polite"></p>
+            <form id="register-form">
+                <label for="register-email">อีเมล</label>
+                <input type="email" id="register-email" name="email" autocomplete="email" placeholder="name@example.com" required>
+
+                <label for="register-password">รหัสผ่าน</label>
+                <input type="password" id="register-password" name="password" autocomplete="new-password" minlength="8" required aria-describedby="password-hint">
+                <small id="password-hint">ใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร</small>
+
+                <label for="register-confirm-password">ยืนยันรหัสผ่าน</label>
+                <input type="password" id="register-confirm-password" name="confirm-password" autocomplete="new-password" minlength="8" required>
+
+                <button type="submit" id="register-submit">สร้างบัญชี</button>
+            </form>
+            <p class="auth-switch-text">มีบัญชีอยู่แล้ว? <a class="auth-switch" id="login-link" href="login.html">เข้าสู่ระบบ</a></p>
+            <p class="login-hint">หลังสมัครสมาชิก ระบบอาจส่งอีเมลให้คุณกดยืนยันก่อนเข้าสู่ระบบ โปรดตรวจสอบกล่องจดหมายและโฟลเดอร์จดหมายขยะ</p>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="register.js"></script>
+</body>
+</html>

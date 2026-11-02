@@ -306,3 +306,34 @@ th{
     gap: 8px;
     margin-left: 31px;
 }
+
+
+/* Login and registration page links */
+.auth-switch{
+    color: #293f7a;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.auth-switch:hover{
+    color: #5b21b6;
+}
+.auth-switch-text{
+    text-align: center;
+    margin: 18px 0 8px;
+}
+#register-status, #login-status{
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+#register-status:empty, #login-status:empty{
+    display: none;
+}
+#register-form small{
+    color: #555;
+    margin-top: -8px;
+}
+#register-form button:disabled{
+    cursor: wait;
+    opacity: .7;
+}

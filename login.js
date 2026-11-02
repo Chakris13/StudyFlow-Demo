@@ -33,33 +33,9 @@ loginForm.addEventListener('submit', async (event) => {
     }
 });
 
-document.getElementById('register-button').addEventListener('click', async () => {
-    if (!loginForm.reportValidity()) return;
-    loginStatus.textContent = '';
-    const email = document.getElementById('identifier').value.trim();
-    const password = document.getElementById('password').value;
-    if (password.length < 8) {
-        loginStatus.textContent = 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร';
-        return;
-    }
-
-    try {
-        const redirectTo = new URL('login.html', window.location.href).href;
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { emailRedirectTo: redirectTo }
-        });
-        if (error) throw error;
-        if (data.session) {
-            window.location.replace(getDestination());
-        } else {
-            loginStatus.textContent = 'ลงทะเบียนแล้ว กรุณาตรวจสอบอีเมลและกดลิงก์ยืนยันก่อนเข้าสู่ระบบ';
-        }
-    } catch (error) {
-        showError(error);
-    }
-});
+const registerLink = document.getElementById('register-link');
+const returnValue = new URLSearchParams(window.location.search).get('return');
+if (returnValue) registerLink.href = `register.html?return=${encodeURIComponent(returnValue)}`;
 
 document.getElementById('guest-button').addEventListener('click', async () => {
     loginStatus.textContent = '';

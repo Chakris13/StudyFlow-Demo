@@ -16,7 +16,7 @@ async function loadReport() {
         }
     } catch (error) {
         if (reportStatus) reportStatus.textContent = error.message;
-        console.error(error);
+        console.error('StudyFlow dashboard summary failed:', error);
     }
 }
 
