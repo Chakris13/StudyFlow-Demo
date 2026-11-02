@@ -6,6 +6,9 @@
     <title>StudyFlow</title>
     <script>document.documentElement.classList.add('auth-pending')</script>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="supabase-client.js" defer></script>
+    <script src="studyflow-api.js" defer></script>
     <script src="auth-guard.js" defer></script>
 </head>
 <body>
@@ -36,54 +39,6 @@
         </section>
         <p id="settings-status" role="status" aria-live="polite"></p>
     </main>
-    <script>
-        const settingsStatus = document.getElementById('settings-status');
-
-        Promise.all([
-            fetch('auth.php?action=session').then(async (response) => {
-                if (!response.ok) {
-                    throw new Error('ไม่สามารถโหลดข้อมูลบัญชีได้');
-                }
-                return response.json();
-            }),
-            fetch('user_data.php').then(async (response) => {
-                if (!response.ok) {
-                    throw new Error('ไม่สามารถโหลดการตั้งค่าของบัญชีได้');
-                }
-                return response.json();
-            })
-        ])
-            .then(([session, profile]) => {
-                document.getElementById('account-identifier').textContent = session.identifier;
-                document.getElementById('account-type').textContent = session.guest
-                    ? 'ไม่ระบุตัวตน (ผู้เยี่ยมชม)'
-                    : 'บัญชีที่ลงทะเบียน';
-                window.studyFlowSettings = profile.settings;
-            })
-            .catch((error) => {
-                settingsStatus.textContent = error.message;
-            });
-
-        document.getElementById('logout-button').addEventListener('click', async () => {
-            try {
-                const sessionResponse = await fetch('auth.php?action=session');
-                if (!sessionResponse.ok) {
-                    throw new Error('ไม่สามารถตรวจสอบบัญชีก่อนออกจากระบบได้');
-                }
-                const session = await sessionResponse.json();
-                const response = await fetch('auth.php', {
-                    method: 'POST',
-                    headers: { 'X-CSRF-Token': session.csrf },
-                    body: new URLSearchParams({ action: 'logout' })
-                });
-                if (!response.ok) {
-                    throw new Error('ออกจากระบบไม่สำเร็จ กรุณาลองใหม่');
-                }
-                window.location.replace('login.html');
-            } catch (error) {
-                settingsStatus.textContent = error.message;
-            }
-        });
-    </script>
+    <script src="settings.js" defer></script>
 </body>
 </html>

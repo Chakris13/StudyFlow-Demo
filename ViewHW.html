@@ -6,6 +6,9 @@
     <title>StudyFlow</title>
     <script>document.documentElement.classList.add('auth-pending')</script>
     <link rel="stylesheet" href="HW.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="supabase-client.js" defer></script>
+    <script src="studyflow-api.js" defer></script>
     <script src="auth-guard.js" defer></script>
 </head>
 <body>
@@ -47,129 +50,6 @@
             </table>
         </div>
     </main>
-    <script>
-        const statusMessage = document.getElementById('status-message');
-        const homeworkList = document.getElementById('homework-list');
-
-        function formatTimestamp(timestamp) {
-            if (!timestamp) {
-                return '-';
-            }
-
-            const date = new Date(timestamp);
-            return Number.isNaN(date.getTime())
-                ? timestamp
-                : new Intl.DateTimeFormat(undefined, {
-                    dateStyle: 'medium',
-                    timeStyle: 'short'
-                }).format(date);
-        }
-
-        if (new URLSearchParams(window.location.search).has('saved')) {
-            statusMessage.textContent = 'บันทึกการบ้านเรียบร้อยแล้ว';
-        }
-
-        function displayHomework(homework) {
-            if (!Array.isArray(homework)) {
-                throw new Error('ข้อมูลการบ้านไม่ถูกต้อง');
-            }
-
-            homeworkEntries = homework;
-            homeworkList.replaceChildren();
-
-            homework.forEach((item, index) => {
-                const row = document.createElement('tr');
-                [item.hw_name, item.hw_type, item.subject, item.due_date, item.notes].forEach((value) => {
-                    const cell = document.createElement('td');
-                    cell.textContent = value || '';
-                    row.appendChild(cell);
-                });
-
-                const timestampCell = document.createElement('td');
-                timestampCell.className = 'homework-timestamps';
-                [
-                    ['เพิ่ม', item.created_at],
-                    ['เสร็จ', item.completed_at],
-                    ['ส่ง', item.submitted_at]
-                ].forEach(([label, timestamp]) => {
-                    const line = document.createElement('div');
-                    line.textContent = `${label}: ${formatTimestamp(timestamp)}`;
-                    timestampCell.appendChild(line);
-                });
-                row.appendChild(timestampCell);
-
-                const actionCell = document.createElement('td');
-                actionCell.className = 'homework-actions';
-
-                const progressButton = document.createElement('button');
-                progressButton.type = 'button';
-                progressButton.className = 'submit-button';
-                progressButton.textContent = item.submitted
-                    ? 'ส่งแล้ว'
-                    : (item.ready_to_submit || item.completed ? 'ส่ง' : 'เสร็จ');
-                progressButton.disabled = Boolean(item.submitted);
-                progressButton.addEventListener('click', () => {
-                    const action = item.ready_to_submit || item.completed
-                        ? 'submit_homework'
-                        : 'prepare_homework';
-                    updateHomework(index, action);
-                });
-
-                const deleteButton = document.createElement('button');
-                deleteButton.type = 'button';
-                deleteButton.textContent = 'ลบ';
-                deleteButton.addEventListener('click', () => updateHomework(index, 'delete_homework'));
-                actionCell.append(progressButton, deleteButton);
-                row.appendChild(actionCell);
-                homeworkList.appendChild(row);
-            });
-
-            if (homework.length === 0) {
-                statusMessage.textContent = 'ยังไม่มีรายการการบ้าน';
-            }
-        }
-
-        async function updateHomework(index, action) {
-            try {
-                const response = await fetch('user_data.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-Token': window.studyFlowSession.csrf
-                    },
-                    body: JSON.stringify({ action, index })
-                });
-                const result = await response.json();
-                if (!response.ok) {
-                    throw new Error(result.error || 'ไม่สามารถอัปเดตรายการการบ้านได้');
-                }
-
-                displayHomework(result.homework);
-                if (action === 'delete_homework') {
-                    statusMessage.textContent = 'ลบการบ้านเรียบร้อยแล้ว';
-                } else if (action === 'prepare_homework') {
-                    statusMessage.textContent = 'ทำเครื่องหมายว่าเสร็จแล้ว กดส่งเมื่องานพร้อมส่ง';
-                } else {
-                    statusMessage.textContent = 'ส่งการบ้านเรียบร้อยแล้ว';
-                }
-            } catch (error) {
-                statusMessage.textContent = error.message;
-            }
-        }
-
-        if (window.location.protocol !== 'file:') {
-            fetch('user_data.php')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('ไม่สามารถโหลดรายการการบ้านได้');
-                    }
-                    return response.json();
-                })
-                .then((profile) => displayHomework(profile.homework))
-                .catch((error) => {
-                    statusMessage.textContent = error.message;
-                });
-        }
-    </script>
+    <script src="view-homework.js" defer></script>
 </body>
 </html>

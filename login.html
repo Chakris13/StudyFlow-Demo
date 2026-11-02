@@ -13,8 +13,8 @@
             <h2>เข้าสู่ระบบ StudyFlow</h2>
             <p id="login-status" role="status" aria-live="polite"></p>
             <form id="login-form">
-                <label for="identifier">รหัสนักเรียน / Email</label>
-                <input type="text" id="identifier" name="identifier" autocomplete="username" required>
+                <label for="identifier">Email</label>
+                <input type="email" id="identifier" name="identifier" autocomplete="username" required>
 
                 <label for="password">รหัสผ่าน</label>
                 <input type="password" id="password" name="password" autocomplete="current-password" required>
@@ -23,9 +23,11 @@
                 <button type="button" id="register-button">ลงทะเบียน</button>
                 <button type="button" id="guest-button">ลงทะเบียนแบบไม่ระบุตัวตน</button>
             </form>
-            <p class="login-hint">การลงทะเบียนต้องใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร บัญชีไม่ระบุตัวตนจะอยู่ในเซสชันของเบราว์เซอร์นี้เท่านั้น</p>
+            <p class="login-hint">การลงทะเบียนต้องใช้รหัสผ่านอย่างน้อย 8 ตัวอักษร บัญชีผู้เยี่ยมชมจะผูกกับเบราว์เซอร์นี้เท่านั้น และไม่สามารถใช้บัญชีเดิมบนอุปกรณ์อื่นได้</p>
         </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
     <script src="login.js"></script>
 </body>
 </html>

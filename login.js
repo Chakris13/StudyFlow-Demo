@@ -1,70 +1,77 @@
 const loginForm = document.getElementById('login-form');
 const loginStatus = document.getElementById('login-status');
+const supabase = window.studyFlowSupabase;
 
-if (window.location.protocol === 'file:') {
-    loginStatus.textContent = 'StudyFlow requires PHP. Open the site through your PHP server instead of opening this file directly.';
+function getDestination() {
+    const requested = new URLSearchParams(window.location.search).get('return');
+    const allowed = ['index.html', 'HW.html', 'ViewHW.html', 'Settings.html', 'Score.html'];
+    return allowed.includes(requested) ? requested : 'index.html';
 }
 
-async function submitAccountAction(action) {
-    if (window.location.protocol === 'file:') {
-        loginStatus.textContent = 'StudyFlow requires PHP. Open the site through your PHP server instead of opening this file directly.';
-        return;
-    }
+function showError(error) {
+    loginStatus.textContent = error?.message || 'ไม่สามารถดำเนินการได้ กรุณาลองใหม่';
+}
 
+async function redirectIfSignedIn() {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    if (data.session?.user) window.location.replace(getDestination());
+}
+
+loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
     loginStatus.textContent = '';
-    const formData = new FormData(loginForm);
-    const payload = new URLSearchParams({ action });
-    for (const [key, value] of formData.entries()) {
-        payload.set(key, String(value));
+    const email = document.getElementById('identifier').value.trim();
+    const password = document.getElementById('password').value;
+
+    try {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        window.location.replace(getDestination());
+    } catch (error) {
+        showError(error);
+    }
+});
+
+document.getElementById('register-button').addEventListener('click', async () => {
+    if (!loginForm.reportValidity()) return;
+    loginStatus.textContent = '';
+    const email = document.getElementById('identifier').value.trim();
+    const password = document.getElementById('password').value;
+    if (password.length < 8) {
+        loginStatus.textContent = 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร';
+        return;
     }
 
     try {
-        const response = await fetch('auth.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: payload
+        const redirectTo = new URL('login.html', window.location.href).href;
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: { emailRedirectTo: redirectTo }
         });
-        const result = await response.json();
-        if (!response.ok) {
-            throw new Error(result.error || 'ไม่สามารถเข้าสู่ระบบได้');
+        if (error) throw error;
+        if (data.session) {
+            window.location.replace(getDestination());
+        } else {
+            loginStatus.textContent = 'ลงทะเบียนแล้ว กรุณาตรวจสอบอีเมลและกดลิงก์ยืนยันก่อนเข้าสู่ระบบ';
         }
-
-        const requestedReturn = new URLSearchParams(window.location.search).get('return');
-        const allowedPages = ['index.html', 'HW.html', 'ViewHW.html', 'Settings.html'];
-        const destination = allowedPages.includes(requestedReturn) ? requestedReturn : 'index.html';
-        window.location.replace(destination);
     } catch (error) {
-        loginStatus.textContent = window.location.protocol === 'file:'
-            ? 'กรุณาเปิดเว็บไซต์ผ่าน PHP server เพื่อใช้งานระบบบัญชี'
+        showError(error);
+    }
+});
+
+document.getElementById('guest-button').addEventListener('click', async () => {
+    loginStatus.textContent = '';
+    try {
+        const { error } = await supabase.auth.signInAnonymously();
+        if (error) throw error;
+        window.location.replace(getDestination());
+    } catch (error) {
+        loginStatus.textContent = error.message.includes('anonymous')
+            ? 'ยังไม่ได้เปิด Anonymous Sign-Ins ใน Supabase Authentication settings'
             : error.message;
     }
-}
-
-loginForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    submitAccountAction('login');
 });
 
-document.getElementById('register-button').addEventListener('click', () => {
-    if (!loginForm.reportValidity()) {
-        return;
-    }
-    submitAccountAction('register');
-});
-
-document.getElementById('guest-button').addEventListener('click', () => {
-    submitAccountAction('guest');
-});
-
-if (window.location.protocol !== 'file:') {
-    fetch('auth.php?action=session')
-        .then((response) => response.json())
-        .then((result) => {
-            if (result.authenticated) {
-                window.location.replace('index.html');
-            }
-        })
-        .catch(() => {
-            loginStatus.textContent = 'ไม่สามารถเชื่อมต่อระบบบัญชีได้';
-        });
-}
+redirectIfSignedIn().catch(showError);
