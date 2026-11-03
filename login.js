@@ -1,6 +1,6 @@
 const loginForm = document.getElementById('login-form');
 const loginStatus = document.getElementById('login-status');
-const supabase = window.studyFlowSupabase;
+const studyFlowClient = window.studyFlowSupabase;
 
 function getDestination() {
     const requested = new URLSearchParams(window.location.search).get('return');
@@ -13,7 +13,7 @@ function showError(error) {
 }
 
 async function redirectIfSignedIn() {
-    const { data, error } = await supabase.auth.getSession();
+    const { data, error } = await studyFlowClient.auth.getSession();
     if (error) throw error;
     if (data.session?.user) window.location.replace(getDestination());
 }
@@ -25,7 +25,7 @@ loginForm.addEventListener('submit', async (event) => {
     const password = document.getElementById('password').value;
 
     try {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { error } = await studyFlowClient.auth.signInWithPassword({ email, password });
         if (error) throw error;
         window.location.replace(getDestination());
     } catch (error) {
@@ -40,7 +40,7 @@ if (returnValue) registerLink.href = `register.html?return=${encodeURIComponent(
 document.getElementById('guest-button').addEventListener('click', async () => {
     loginStatus.textContent = '';
     try {
-        const { error } = await supabase.auth.signInAnonymously();
+        const { error } = await studyFlowClient.auth.signInAnonymously();
         if (error) throw error;
         window.location.replace(getDestination());
     } catch (error) {
