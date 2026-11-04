@@ -1,5 +1,5 @@
 import { createAdminClient, corsHeaders, jsonResponse, originAllowed, randomState, requireUser, sha256Hex, googleClientId } from "../_shared/common.ts";
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_URL = (Deno.env.get("SUPABASE_URL") ?? "").replace(/\/+$/, "");
 const CALLBACK_URL = `${SUPABASE_URL}/functions/v1/google-calendar-oauth-callback`;
 const REQUIRED_SCOPE = "https://www.googleapis.com/auth/calendar.events";
 Deno.serve(async (request) => {
