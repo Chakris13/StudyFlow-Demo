@@ -1,5 +1,5 @@
 import { createAdminClient, encryptSecret, googleClientId, googleClientSecret, sha256Hex, siteSettingsUrl } from "../_shared/common.ts";
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_URL = (Deno.env.get("SUPABASE_URL") ?? "").replace(/\/+$/, "");
 const CALLBACK_URL = `${SUPABASE_URL}/functions/v1/google-calendar-oauth-callback`;
 function redirect(status: string): Response {
   return new Response(null, { status: 302, headers: { "Location": siteSettingsUrl(status), "Cache-Control": "no-store" } });
