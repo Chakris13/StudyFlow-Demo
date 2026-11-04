@@ -45,8 +45,49 @@
         if (!row.hw_name || !row.hw_type || !row.subject) {
             throw new Error('กรุณากรอกข้อมูลที่จำเป็นให้ครบ');
         }
-        const { error } = await client.from('homework').insert(row);
-        throwIfError(error);
+        const { data: inserted, error: insertError } = await client
+            .from('homework')
+            .insert(row)
+            .select('id')
+            .single();
+        throwIfError(insertError);
+
+        let calendarSync = 'not_applicable';
+        let calendarMessage = '';
+        if (row.record_kind === 'homework' && row.due_date) {
+            if (user.is_anonymous) {
+                calendarSync = 'not_connected';
+            } else {
+                try {
+                    const { data: calendarResult, error: calendarError } = await client.functions.invoke(
+                        'google-calendar-create-event',
+                        { body: { homeworkId: inserted.id } }
+                    );
+                    if (calendarError) {
+                        calendarSync = 'failed';
+                        calendarMessage = calendarError.message || 'ไม่สามารถติดต่อ Google Calendar ได้';
+                        try {
+                            const responseBody = await calendarError.context?.json();
+                            if (responseBody?.error) calendarMessage = responseBody.error;
+                        } catch {
+                            // Keep the SDK error message.
+                        }
+                    } else if (!calendarResult?.connected) {
+                        calendarSync = 'not_connected';
+                    } else if (calendarResult.created || calendarResult.htmlLink) {
+                        calendarSync = 'created';
+                    } else {
+                        calendarSync = 'failed';
+                        calendarMessage = calendarResult?.error || 'ไม่สามารถเพิ่ม Event ได้';
+                    }
+                } catch (calendarError) {
+                    calendarSync = 'failed';
+                    calendarMessage = calendarError?.message || 'ไม่สามารถติดต่อ Google Calendar ได้';
+                }
+            }
+        }
+
+        return { id: inserted.id, calendarSync, calendarMessage };
     }
 
     async function updateHomework(id, action) {

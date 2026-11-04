@@ -7,7 +7,7 @@ homeworkForm?.addEventListener('submit', async (event) => {
     if (status) status.textContent = 'กำลังบันทึก...';
     const form = new FormData(homeworkForm);
     try {
-        await window.StudyFlowAPI.addHomework({
+        const result = await window.StudyFlowAPI.addHomework({
             hw_name: form.get('hw_name'),
             hw_type: form.get('hw_type'),
             subject: form.get('subject'),
@@ -15,7 +15,10 @@ homeworkForm?.addEventListener('submit', async (event) => {
             notes: form.get('notes'),
             record_kind: 'homework'
         });
-        window.location.replace('ViewHW.html?saved=1');
+        const params = new URLSearchParams({ saved: '1' });
+        if (result.calendarSync) params.set('calendar', result.calendarSync);
+        if (result.calendarMessage) params.set('calendar_message', result.calendarMessage);
+        window.location.replace(`ViewHW.html?${params.toString()}`);
     } catch (error) {
         if (status) status.textContent = error.message;
         else alert(error.message);

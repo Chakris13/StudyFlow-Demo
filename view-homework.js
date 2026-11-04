@@ -9,8 +9,19 @@ function formatTimestamp(timestamp) {
     }).format(date);
 }
 
-if (new URLSearchParams(window.location.search).has('saved')) {
-    statusMessage.textContent = 'บันทึกข้อมูลเรียบร้อยแล้ว';
+const query = new URLSearchParams(window.location.search);
+if (query.has('saved')) {
+    const calendar = query.get('calendar');
+    if (calendar === 'created') {
+        statusMessage.textContent = 'บันทึกการบ้านเรียบร้อยแล้ว และเพิ่มกำหนดส่งลง Google Calendar แล้ว';
+    } else if (calendar === 'not_connected') {
+        statusMessage.textContent = 'บันทึกการบ้านแล้ว แต่ยังไม่ได้เชื่อม Google Calendar ไปที่หน้า Settings เพื่อเชื่อมต่อ';
+    } else if (calendar === 'failed') {
+        const detail = query.get('calendar_message');
+        statusMessage.textContent = 'บันทึกการบ้านแล้ว แต่เพิ่มลง Google Calendar ไม่สำเร็จ' + (detail ? ': ' + detail : '');
+    } else {
+        statusMessage.textContent = 'บันทึกข้อมูลเรียบร้อยแล้ว';
+    }
 }
 
 function displayHomework(homework) {
