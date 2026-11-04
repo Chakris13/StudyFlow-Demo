@@ -1,0 +1,5 @@
+project_id = "qxfwcnupqqavszgcxfmh"
+
+# Google redirects here without a Supabase JWT.
+[functions.google-calendar-oauth-callback]
+verify_jwt = false
