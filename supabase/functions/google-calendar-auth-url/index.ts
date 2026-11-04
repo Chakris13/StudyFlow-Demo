@@ -19,7 +19,7 @@ Deno.serve(async (request) => {
     if (stateError) throw new Error("ไม่สามารถเริ่มการเชื่อม Google Calendar ได้: " + stateError.message);
     const params = new URLSearchParams({
       client_id: googleClientId(), redirect_uri: CALLBACK_URL, response_type: "code",
-      scope: REQUIRED_SCOPE, access_type: "offline", prompt: "consent",
+      scope: REQUIRED_SCOPE, access_type: "offline", prompt: "consent select_account",
       include_granted_scopes: "true", state,
     });
     return jsonResponse({ url: `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`, expiresInSeconds: 600 }, 200, origin);
