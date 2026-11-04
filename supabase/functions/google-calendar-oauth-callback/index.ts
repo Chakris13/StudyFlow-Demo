@@ -39,9 +39,8 @@ Deno.serve(async (request) => {
 
     let refreshToken = tokenData.refresh_token as string | undefined;
     if (!refreshToken) {
-      const { data: existing } = await admin.from("google_calendar_tokens")
-        .select("user_id").eq("user_id", stateRow.user_id).maybeSingle();
-      if (existing) return redirect("connected");
+      // Do not silently keep a previous Google account's token when the user
+      // may have selected a different account in the consent screen.
       return redirect("no_refresh_token");
     }
 
