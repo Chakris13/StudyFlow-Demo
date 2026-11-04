@@ -51,3 +51,25 @@ The replacement ZIP intentionally omits the obsolete PHP backend files because G
 - Old PHP password hashes and server-side `users.json` / profile files are not imported. Register new accounts in Supabase. No old private data file was included in the supplied ZIP.
 - This ZIP uses the project URL and Publishable Key in `supabase-client.js`. These are intended for browser use. Never add a Secret Key or `service_role` key to the repository.
 - The Score page is now stored as an `exam` record in the same `homework` table, including test date and score fields.
+
+## 5. Google Calendar integration
+
+The Google Calendar integration is optional. Once connected, adding a homework record with a due date creates an all-day event on that date in the user's primary Google Calendar. Exam-score records and homework without a due date are not synced. StudyFlow still saves the homework if Calendar sync is unavailable.
+
+Follow the Thai setup guide in [supabase/GOOGLE-CALENDAR-SETUP.md](supabase/GOOGLE-CALENDAR-SETUP.md). In summary:
+
+1. Run `supabase/google-calendar-migration.sql` once in the Supabase SQL Editor.
+2. Enable the Google Calendar API and create an OAuth 2.0 Web application client in Google Cloud.
+3. Set its authorized redirect URI to:
+   `https://qxfwcnupqqavszgcxfmh.supabase.co/functions/v1/google-calendar-oauth-callback`
+4. Add `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_TOKEN_ENCRYPTION_KEY` as Supabase Edge Function secrets. Never commit the Client Secret or encryption key to GitHub.
+5. Deploy the four functions from this repository with the Supabase CLI:
+   - `google-calendar-auth-url`
+   - `google-calendar-oauth-callback`
+   - `google-calendar-status`
+   - `google-calendar-create-event`
+
+Google refresh tokens are encrypted with AES-GCM before being stored in a table that is not readable by browser roles. Only server-side Edge Functions use the Supabase service-role key. The Google Client Secret and token-encryption key are never sent to GitHub Pages.
+
+The integration adds an event only for new homework with a due date. Events are all-day events; Google Calendar's default reminders are used. Event IDs are deterministic per StudyFlow homework row so a retry does not create duplicates.
+
