@@ -919,3 +919,25 @@ textarea {
     }
 }
 
+
+
+/* Google Calendar connection panel */
+.calendar-card {
+    margin-bottom: 18px;
+    border: 1px solid rgba(255,255,255,.22);
+    box-shadow: 0 8px 24px rgba(8, 7, 44, .14);
+}
+.calendar-card p {
+    line-height: 1.55;
+}
+.calendar-card .logout-button {
+    border: 0;
+    border-radius: 7px;
+    background: #495a6c;
+    color: #fff;
+    font-weight: 700;
+}
+.calendar-card .logout-button:disabled {
+    opacity: .65;
+    cursor: wait;
+}
