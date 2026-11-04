@@ -46,11 +46,11 @@ export async function requireUser(request: Request) {
   if (!authorization?.startsWith("Bearer ")) throw new Error("กรุณาเข้าสู่ระบบ StudyFlow ก่อนเชื่อม Google Calendar");
   const url = Deno.env.get("SUPABASE_URL");
   if (!url) throw new Error("SUPABASE_URL is not configured");
+  const token = authorization.slice("Bearer ".length);
   const userClient = createClient(url, readKey("SUPABASE_PUBLISHABLE_KEYS", "SUPABASE_ANON_KEY"), {
-    global: { headers: { Authorization: authorization } },
     auth: { persistSession: false, autoRefreshToken: false },
   });
-  const { data, error } = await userClient.auth.getUser();
+  const { data, error } = await userClient.auth.getUser(token);
   if (error || !data.user) throw new Error("Session StudyFlow หมดอายุ กรุณาเข้าสู่ระบบใหม่");
   if (data.user.is_anonymous) throw new Error("ต้องใช้บัญชี StudyFlow ที่ลงทะเบียนแล้ว จึงจะเชื่อม Google Calendar ได้");
   return data.user;
