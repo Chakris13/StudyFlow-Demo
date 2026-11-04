@@ -846,3 +846,76 @@ textarea {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* iPad portrait: display homework records as cards instead of a cramped table. */
+@media (min-width: 601px) and (max-width: 900px) {
+    .table-container {
+        overflow: visible;
+    }
+
+    #homework-table,
+    #homework-table tbody {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    #homework-table thead {
+        display: none;
+    }
+
+    #homework-table tbody tr {
+        display: block;
+        margin: 0 0 16px;
+        overflow: hidden;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #fff;
+        color: #222;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    #homework-table tbody td {
+        display: grid;
+        grid-template-columns: minmax(110px, 26%) minmax(0, 1fr);
+        gap: 12px;
+        width: 100% !important;
+        padding: 12px 14px;
+        border: 0;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    #homework-table tbody td::before {
+        font-weight: 700;
+        color: #334155;
+    }
+
+    #homework-table tbody td:nth-child(1)::before { content: "ชื่อการบ้าน"; }
+    #homework-table tbody td:nth-child(2)::before { content: "ประเภท"; }
+    #homework-table tbody td:nth-child(3)::before { content: "รายวิชา"; }
+    #homework-table tbody td:nth-child(4)::before { content: "วันครบกำหนด"; }
+    #homework-table tbody td:nth-child(5)::before { content: "โน้ต"; }
+    #homework-table tbody td:nth-child(6)::before { content: "เวลา / คะแนน"; }
+    #homework-table tbody td:nth-child(7)::before { content: "จัดการ"; }
+
+    #homework-table tbody td:last-child {
+        border-bottom: 0;
+    }
+
+    .homework-actions {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .homework-actions button {
+        flex: 0 1 auto;
+        min-width: 100px;
+        min-height: 44px;
+    }
+}
+
