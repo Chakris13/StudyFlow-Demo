@@ -438,7 +438,6 @@ input[type="submit"],
 .logout-button {
     min-height: 44px;
     touch-action: manipulation;
-    background-color: blue;
 }
 
 input,
