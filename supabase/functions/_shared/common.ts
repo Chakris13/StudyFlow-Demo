@@ -2,8 +2,6 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const ALLOWED_ORIGINS = new Set([
   "https://chakris13.github.io",
-  "http://localhost:5500",
-  "http://127.0.0.1:5500",
 ]);
 
 export function originAllowed(origin: string | null): boolean {
