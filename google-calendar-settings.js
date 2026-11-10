@@ -62,4 +62,11 @@ connectCalendarButton.addEventListener('click', async () => {
     }
 });
 
-refreshGoogleCalendarStatus();
+// Do not immediately overwrite the OAuth callback result. The callback may
+// have redirected with a useful error status (token_error, save_error, etc.).
+// Refresh the live status only on a normal page load without a callback result.
+if (callbackStatus === 'connected') {
+    connectCalendarButton.textContent = 'เชื่อมต่อบัญชี Google ใหม่';
+} else if (!callbackStatus) {
+    refreshGoogleCalendarStatus();
+}
