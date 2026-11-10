@@ -13,6 +13,7 @@ homeworkForm?.addEventListener('submit', async (event) => {
             subject: form.get('subject'),
             due_date: form.get('due_date'),
             notes: form.get('notes'),
+            calendar_color_id: form.get('calendar_color_id'),
             record_kind: 'homework'
         });
         const params = new URLSearchParams({ saved: '1' });
