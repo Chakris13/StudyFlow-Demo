@@ -61,7 +61,7 @@
                 try {
                     const { data: calendarResult, error: calendarError } = await client.functions.invoke(
                         'google-calendar-create-event',
-                        { body: { homeworkId: inserted.id } }
+                        { body: { homeworkId: inserted.id, calendarColorId: values.calendar_color_id || null } }
                     );
                     if (calendarError) {
                         calendarSync = 'failed';
