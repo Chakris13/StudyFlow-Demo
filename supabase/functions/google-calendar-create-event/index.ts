@@ -57,8 +57,16 @@ Deno.serve(async (request) => {
     const accessToken = await refreshAccessToken(refreshToken);
     // UUID hex plus a permitted base32hex prefix gives a stable id, making retries idempotent.
     const eventId = "h" + homework.id.replaceAll("-", "").toLowerCase();
+    const requestedColorId = payload.calendarColorId == null || payload.calendarColorId === ""
+      ? null
+      : String(payload.calendarColorId);
+    const allowedColorIds = new Set(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]);
+    if (requestedColorId !== null && !allowedColorIds.has(requestedColorId)) {
+      return jsonResponse({ error: "calendarColorId ไม่ถูกต้อง" }, 400, origin);
+    }
     const event = {
       id: eventId,
+      ...(requestedColorId ? { colorId: requestedColorId } : {}),
       summary: `StudyFlow: ${homework.hw_name} — ${homework.subject}`,
       description: [
         `ประเภท: ${homework.hw_type}`,
