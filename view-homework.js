@@ -1,5 +1,7 @@
 const statusMessage = document.getElementById('status-message');
 const homeworkList = document.getElementById('homework-list');
+const editDialog = document.getElementById('edit-homework-dialog');
+const editForm = document.getElementById('edit-homework-form');
 
 function formatTimestamp(timestamp) {
     if (!timestamp) return '-';
@@ -62,6 +64,14 @@ function displayHomework(homework) {
             updateHomework(item.id, action);
         });
 
+        if (item.record_kind !== 'exam') {
+            const editButton = document.createElement('button');
+            editButton.type = 'button';
+            editButton.textContent = 'แก้ไข';
+            editButton.addEventListener('click', () => openEditDialog(item));
+            actionCell.appendChild(editButton);
+        }
+
         const deleteButton = document.createElement('button');
         deleteButton.type = 'button';
         deleteButton.textContent = 'ลบ';
@@ -86,7 +96,41 @@ async function refreshHomework() {
 async function updateHomework(id, action) {
     try {
         await window.StudyFlowAPI.updateHomework(id, action);
+        await function openEditDialog(item) {
+    document.getElementById('edit-homework-id').value = item.id;
+    document.getElementById('edit-hw-name').value = item.hw_name || '';
+    document.getElementById('edit-hw-type').value = item.hw_type || 'การบ้าน';
+    document.getElementById('edit-subject').value = item.subject || '';
+    document.getElementById('edit-due-date').value = item.due_date || '';
+    document.getElementById('edit-notes').value = item.notes || '';
+    editDialog.showModal();
+}
+
+document.getElementById('cancel-edit-homework').addEventListener('click', () => editDialog.close());
+editForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const button = editForm.querySelector('[type="submit"]');
+    button.disabled = true;
+    statusMessage.textContent = 'กำลังบันทึกการแก้ไข...';
+    try {
+        await window.StudyFlowAPI.editHomework(document.getElementById('edit-homework-id').value, {
+            hw_name: document.getElementById('edit-hw-name').value,
+            hw_type: document.getElementById('edit-hw-type').value,
+            subject: document.getElementById('edit-subject').value,
+            due_date: document.getElementById('edit-due-date').value,
+            notes: document.getElementById('edit-notes').value
+        });
+        editDialog.close();
         await refreshHomework();
+        statusMessage.textContent = 'แก้ไขการบ้านเรียบร้อยแล้ว';
+    } catch (error) {
+        statusMessage.textContent = error.message || 'ไม่สามารถแก้ไขการบ้านได้';
+    } finally {
+        button.disabled = false;
+    }
+});
+
+refreshHomework();
         statusMessage.textContent = action === 'delete_homework'
             ? 'ลบรายการเรียบร้อยแล้ว'
             : action === 'prepare_homework'
