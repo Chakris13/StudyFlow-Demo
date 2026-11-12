@@ -90,6 +90,34 @@
         return { id: inserted.id, calendarSync, calendarMessage };
     }
 
+    async function editHomework(id, values) {
+        const user = await currentUser();
+        const patch = {
+            hw_name: String(values.hw_name || '').trim(),
+            hw_type: String(values.hw_type || '').trim(),
+            subject: String(values.subject || '').trim(),
+            due_date: values.due_date || null,
+            notes: String(values.notes || '').trim()
+        };
+        if (!patch.hw_name || !patch.hw_type || !patch.subject) throw new Error('กรุณากรอกชื่อการบ้าน ประเภท และรายวิชาให้ครบ');
+        const { data: existing, error: readError } = await client.from('homework')
+            .select('id, record_kind, calendar_event_id').eq('id', id).eq('user_id', user.id).single();
+        throwIfError(readError);
+        if (existing.record_kind === 'exam') throw new Error('ไม่สามารถแก้ไขรายการสอบในส่วนนี้ได้');
+        const { error: updateError } = await client.from('homework').update(patch).eq('id', id).eq('user_id', user.id);
+        throwIfError(updateError);
+        if (existing.calendar_event_id && patch.due_date && !user.is_anonymous) {
+            const { error: syncError } = await client.functions.invoke('google-calendar-create-event', {
+                body: { homeworkId: id, updateExisting: true }
+            });
+            if (syncError) {
+                let detail = syncError.message || 'Google Calendar sync failed';
+                try { const body = await syncError.context?.json(); if (body?.error) detail = body.error; } catch {}
+                throw new Error('บันทึกการบ้านแล้ว แต่ปรับปรุง Google Calendar ไม่สำเร็จ: ' + detail);
+            }
+        }
+    }
+
     async function updateHomework(id, action) {
         await currentUser();
         if (action === 'delete_homework') {
@@ -135,6 +163,7 @@
         currentUser,
         loadProfile,
         addHomework,
+        editHomework,
         updateHomework,
         saveSettings
     };
