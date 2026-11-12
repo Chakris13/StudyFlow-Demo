@@ -33,6 +33,19 @@
     <main>
         <h2 style="margin-top: 0; margin-bottom: 0;">รายการการบ้าน</h2>
         <p id="status-message" role="status" aria-live="polite"></p>
+        <dialog id="edit-homework-dialog" class="edit-homework-dialog">
+            <form id="edit-homework-form">
+                <h3>แก้ไขการบ้าน</h3>
+                <input type="hidden" id="edit-homework-id">
+                <label for="edit-hw-name">ชื่อการบ้าน</label><input id="edit-hw-name" type="text" required>
+                <label for="edit-hw-type">ประเภท</label>
+                <select id="edit-hw-type" required><option>การบ้าน</option><option>งานกลุ่ม</option><option>รายงาน</option><option>อื่นๆ</option></select>
+                <label for="edit-subject">รายวิชา</label><input id="edit-subject" type="text" required>
+                <label for="edit-due-date">วันครบกำหนด</label><input id="edit-due-date" type="date">
+                <label for="edit-notes">โน้ตเพิ่มเติม</label><textarea id="edit-notes" rows="4"></textarea>
+                <div class="edit-homework-actions"><button type="button" id="cancel-edit-homework">ยกเลิก</button><button type="submit">บันทึกการแก้ไข</button></div>
+            </form>
+        </dialog>
         <div class="table-container">
             <table id="homework-table" border="2">
                 <thead>
