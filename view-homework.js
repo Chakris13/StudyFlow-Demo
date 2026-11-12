@@ -141,29 +141,45 @@ homeworkSort.addEventListener('change', () => {
 });
 
 const homeworkTable = document.getElementById('homework-table');
-function toggleExpandedColumn(header) {
-    const columnIndex = Array.from(header.parentElement.children).indexOf(header) + 1;
-    homeworkTable.classList.remove(...Array.from(homeworkTable.classList).filter(name => name.startsWith('expanded-column-')));
-    if (expandedColumn === columnIndex) {
-        expandedColumn = null;
-        return;
-    }
-    expandedColumn = columnIndex;
-    homeworkTable.classList.add(`expanded-column-${columnIndex}`);
+const columnHeaders = Array.from(homeworkTable.querySelectorAll('thead th'));
+
+function syncExpandedColumnState() {
+    columnHeaders.forEach((header, index) => {
+        const isExpanded = expandedColumn === index + 1;
+        header.setAttribute('aria-pressed', String(isExpanded));
+        header.setAttribute('aria-expanded', String(isExpanded));
+        header.title = isExpanded
+            ? 'กด Enter หรือ Space เพื่อคืนขนาดคอลัมน์'
+            : 'กด Enter หรือ Space เพื่อขยายคอลัมน์';
+    });
 }
 
-homeworkTable.querySelectorAll('thead th').forEach((header, index) => {
+function toggleExpandedColumn(header) {
+    const columnIndex = columnHeaders.indexOf(header) + 1;
+    if (columnIndex < 1) return;
+
+    homeworkTable.classList.remove(...Array.from(homeworkTable.classList).filter(name => name.startsWith('expanded-column-')));
+    expandedColumn = expandedColumn === columnIndex ? null : columnIndex;
+
+    if (expandedColumn !== null) {
+        homeworkTable.classList.add(`expanded-column-${expandedColumn}`);
+    }
+    syncExpandedColumnState();
+}
+
+columnHeaders.forEach((header) => {
     header.tabIndex = 0;
     header.setAttribute('role', 'button');
-    header.title = 'คลิกเพื่อขยายคอลัมน์นี้';
     header.addEventListener('click', () => toggleExpandedColumn(header));
     header.addEventListener('keydown', (event) => {
+        if (event.repeat) return;
         if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault();
             toggleExpandedColumn(header);
         }
     });
 });
+syncExpandedColumnState();
 
 document.getElementById('cancel-edit-homework').addEventListener('click', () => editDialog.close());
 editForm.addEventListener('submit', async (event) => {
