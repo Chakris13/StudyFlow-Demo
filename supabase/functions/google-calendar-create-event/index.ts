@@ -84,7 +84,7 @@ Deno.serve(async (request) => {
     let response = await fetch(eventUrl, {
       method: updateExisting ? "PATCH" : "POST",
       headers: { "Authorization": `Bearer ${accessToken}`, "Content-Type": "application/json" },
-      body: JSON.stringify(event),
+      body: JSON.stringify(updateExisting ? Object.fromEntries(Object.entries(event).filter(([key]) => key !== "id")) : event),
     });
     let eventData = await response.json();
     if (response.status === 409) {
