@@ -1092,22 +1092,3 @@ textarea {
         flex-basis: 100%;
     }
 }
-
-
-/* Homework progress row colors */
-#homework-table tbody tr.homework-row-completed > td {
-    background-color: #fcf89f !important;
-    color: #454545 !important;
-}
-#homework-table tbody tr.homework-row-submitted > td {
-    background-color: #a8a8a2 !important;
-    color: #454545 !important;
-}
-#homework-table tbody tr.homework-row-completed,
-#homework-table tbody tr.homework-row-submitted {
-    color: #454545;
-}
-#homework-table tbody tr.homework-row-completed .homework-timestamps,
-#homework-table tbody tr.homework-row-submitted .homework-timestamps {
-    color: #454545;
-}
