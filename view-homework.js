@@ -2,6 +2,10 @@ const statusMessage = document.getElementById('status-message');
 const homeworkList = document.getElementById('homework-list');
 const editDialog = document.getElementById('edit-homework-dialog');
 const editForm = document.getElementById('edit-homework-form');
+const homeworkSort = document.getElementById('homework-sort');
+let allHomework = [];
+let expandedColumn = null;
+let sortMode = 'submitted';
 
 function formatTimestamp(timestamp) {
     if (!timestamp) return '-';
@@ -28,9 +32,23 @@ if (query.has('saved')) {
 
 function displayHomework(homework) {
     if (!Array.isArray(homework)) throw new Error('ข้อมูลการบ้านไม่ถูกต้อง');
-    homeworkList.replaceChildren();
+    allHomework = homework.slice();
+    renderSortedHomework();
+}
 
-    homework.forEach((item) => {
+function renderSortedHomework() {
+    homeworkList.replaceChildren();
+    const sorted = allHomework.slice();
+    const timestampValue = (value) => value ? new Date(value).getTime() || 0 : 0;
+    if (sortMode === 'submitted') {
+        sorted.sort((a, b) => timestampValue(b.submitted_at) - timestampValue(a.submitted_at));
+    } else if (sortMode === 'created') {
+        sorted.sort((a, b) => timestampValue(b.created_at) - timestampValue(a.created_at));
+    } else if (sortMode === 'name') {
+        sorted.sort((a, b) => (a.hw_name || '').localeCompare(b.hw_name || '', 'th', { sensitivity: 'base' }));
+    }
+
+    sorted.forEach((item) => {
         const row = document.createElement('tr');
         [item.hw_name, item.hw_type, item.subject, item.due_date || item.test_date, item.notes].forEach((value) => {
             const cell = document.createElement('td');
@@ -81,7 +99,7 @@ function displayHomework(homework) {
         homeworkList.appendChild(row);
     });
 
-    if (homework.length === 0) statusMessage.textContent = 'ยังไม่มีรายการการบ้าน';
+    if (sorted.length === 0) statusMessage.textContent = 'ยังไม่มีรายการการบ้าน';
 }
 
 async function refreshHomework() {
@@ -116,6 +134,36 @@ function openEditDialog(item) {
     document.getElementById('edit-notes').value = item.notes || '';
     editDialog.showModal();
 }
+
+homeworkSort.addEventListener('change', () => {
+    sortMode = homeworkSort.value;
+    renderSortedHomework();
+});
+
+const homeworkTable = document.getElementById('homework-table');
+function toggleExpandedColumn(header) {
+    const columnIndex = Array.from(header.parentElement.children).indexOf(header) + 1;
+    homeworkTable.classList.remove(...Array.from(homeworkTable.classList).filter(name => name.startsWith('expanded-column-')));
+    if (expandedColumn === columnIndex) {
+        expandedColumn = null;
+        return;
+    }
+    expandedColumn = columnIndex;
+    homeworkTable.classList.add(`expanded-column-${columnIndex}`);
+}
+
+homeworkTable.querySelectorAll('thead th').forEach((header, index) => {
+    header.tabIndex = 0;
+    header.setAttribute('role', 'button');
+    header.title = 'คลิกเพื่อขยายคอลัมน์นี้';
+    header.addEventListener('click', () => toggleExpandedColumn(header));
+    header.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggleExpandedColumn(header);
+        }
+    });
+});
 
 document.getElementById('cancel-edit-homework').addEventListener('click', () => editDialog.close());
 editForm.addEventListener('submit', async (event) => {
