@@ -96,7 +96,18 @@ async function refreshHomework() {
 async function updateHomework(id, action) {
     try {
         await window.StudyFlowAPI.updateHomework(id, action);
-        await function openEditDialog(item) {
+        await refreshHomework();
+        statusMessage.textContent = action === 'delete_homework'
+            ? 'ลบรายการเรียบร้อยแล้ว'
+            : action === 'prepare_homework'
+                ? 'ทำเครื่องหมายว่าเสร็จแล้ว กดส่งเมื่องานพร้อมส่ง'
+                : 'ส่งการบ้านเรียบร้อยแล้ว';
+    } catch (error) {
+        statusMessage.textContent = error.message;
+    }
+}
+
+function openEditDialog(item) {
     document.getElementById('edit-homework-id').value = item.id;
     document.getElementById('edit-hw-name').value = item.hw_name || '';
     document.getElementById('edit-hw-type').value = item.hw_type || 'การบ้าน';
@@ -129,16 +140,5 @@ editForm.addEventListener('submit', async (event) => {
         button.disabled = false;
     }
 });
-
-refreshHomework();
-        statusMessage.textContent = action === 'delete_homework'
-            ? 'ลบรายการเรียบร้อยแล้ว'
-            : action === 'prepare_homework'
-                ? 'ทำเครื่องหมายว่าเสร็จแล้ว กดส่งเมื่องานพร้อมส่ง'
-                : 'ส่งการบ้านเรียบร้อยแล้ว';
-    } catch (error) {
-        statusMessage.textContent = error.message;
-    }
-}
 
 refreshHomework();
