@@ -33,6 +33,15 @@
     <main>
         <h2 style="margin-top: 0; margin-bottom: 0;">รายการการบ้าน</h2>
         <p id="status-message" role="status" aria-live="polite"></p>
+        <div class="homework-table-toolbar">
+            <label for="homework-sort">เรียงตาม</label>
+            <select id="homework-sort">
+                <option value="submitted">เวลาส่ง</option>
+                <option value="created">เพิ่มล่าสุด</option>
+                <option value="name">ชื่อ</option>
+            </select>
+            <span class="table-hint">คลิกหัวคอลัมน์เพื่อขยาย / คืนขนาดคอลัมน์</span>
+        </div>
         <dialog id="edit-homework-dialog" class="edit-homework-dialog">
             <form id="edit-homework-form">
                 <h3>แก้ไขการบ้าน</h3>
