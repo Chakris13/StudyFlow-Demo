@@ -1014,3 +1014,81 @@ textarea {
     #homework-table td:nth-child(7) { width: 12%; }
 }
 
+
+
+/* Homework table controls and click-to-expand columns */
+.homework-table-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0 14px;
+    color: #fff;
+}
+.homework-table-toolbar label {
+    font-weight: 700;
+}
+#homework-sort {
+    min-height: 42px;
+    min-width: 150px;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #fff;
+    color: #202124;
+    font-size: 16px;
+}
+.table-hint {
+    font-size: .9rem;
+    opacity: .82;
+}
+#homework-table thead th {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .15s ease;
+}
+#homework-table thead th:hover,
+#homework-table thead th:focus-visible {
+    background: #6541a5;
+    outline: 2px solid #c4b5fd;
+    outline-offset: -2px;
+}
+#homework-table thead th::after {
+    content: " ↔";
+    opacity: .55;
+    font-size: .8em;
+}
+#homework-table[class*="expanded-column-"] {
+    table-layout: auto;
+}
+#homework-table.expanded-column-1 th:nth-child(1),
+#homework-table.expanded-column-1 td:nth-child(1),
+#homework-table.expanded-column-2 th:nth-child(2),
+#homework-table.expanded-column-2 td:nth-child(2),
+#homework-table.expanded-column-3 th:nth-child(3),
+#homework-table.expanded-column-3 td:nth-child(3),
+#homework-table.expanded-column-4 th:nth-child(4),
+#homework-table.expanded-column-4 td:nth-child(4),
+#homework-table.expanded-column-5 th:nth-child(5),
+#homework-table.expanded-column-5 td:nth-child(5),
+#homework-table.expanded-column-6 th:nth-child(6),
+#homework-table.expanded-column-6 td:nth-child(6),
+#homework-table.expanded-column-7 th:nth-child(7),
+#homework-table.expanded-column-7 td:nth-child(7) {
+    width: 42% !important;
+    min-width: 280px;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+#homework-table[class*="expanded-column-"] th:not(:hover),
+#homework-table[class*="expanded-column-"] td {
+    min-width: 90px;
+}
+@media (max-width: 900px) {
+    .homework-table-toolbar {
+        align-items: flex-start;
+    }
+    .table-hint {
+        flex-basis: 100%;
+    }
+}
