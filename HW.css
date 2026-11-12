@@ -966,3 +966,51 @@ textarea {
 .edit-homework-actions button { padding: 10px 16px; border: 0; border-radius: 7px; cursor: pointer; }
 .edit-homework-actions button[type="submit"] { color: #fff; background: #5b21b6; }
 .edit-homework-actions button:disabled { opacity: .65; cursor: wait; }
+
+/* Responsive homework table: use available screen width and avoid breaking words into single characters. */
+@media (min-width: 901px) {
+    .table-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    #homework-table {
+        width: 100%;
+        min-width: 760px;
+        table-layout: auto;
+    }
+
+    #homework-table th,
+    #homework-table td {
+        box-sizing: border-box;
+        padding: clamp(8px, 0.8vw, 13px);
+        line-height: 1.45;
+        vertical-align: middle;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        hyphens: none;
+    }
+
+    #homework-table th:nth-child(1),
+    #homework-table td:nth-child(1) { width: 27%; }
+
+    #homework-table th:nth-child(2),
+    #homework-table td:nth-child(2) { width: 9%; }
+
+    #homework-table th:nth-child(3),
+    #homework-table td:nth-child(3) { width: 12%; }
+
+    #homework-table th:nth-child(4),
+    #homework-table td:nth-child(4) { width: 13%; }
+
+    #homework-table th:nth-child(5),
+    #homework-table td:nth-child(5) { width: 12%; }
+
+    #homework-table th:nth-child(6),
+    #homework-table td:nth-child(6) { width: 15%; }
+
+    #homework-table th:nth-child(7),
+    #homework-table td:nth-child(7) { width: 12%; }
+}
+
