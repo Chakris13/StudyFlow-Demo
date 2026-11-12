@@ -1106,3 +1106,66 @@ textarea {
     overflow-wrap: anywhere;
     word-break: normal;
 }
+
+
+/* Desktop: let the homework table use the full available viewport width. */
+@media (min-width: 901px) {
+    main {
+        width: auto;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: clamp(16px, 2vw, 32px);
+        padding-right: clamp(16px, 2vw, 32px);
+    }
+
+    .table-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #homework-table {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    /* Give the selected column most of the table while keeping all other
+       columns visible within the same full-width table. */
+    #homework-table.expanded-column-1,
+    #homework-table.expanded-column-2,
+    #homework-table.expanded-column-3,
+    #homework-table.expanded-column-4,
+    #homework-table.expanded-column-5,
+    #homework-table.expanded-column-6,
+    #homework-table.expanded-column-7 {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    #homework-table.expanded-column-1 th:nth-child(1),
+    #homework-table.expanded-column-1 td:nth-child(1),
+    #homework-table.expanded-column-2 th:nth-child(2),
+    #homework-table.expanded-column-2 td:nth-child(2),
+    #homework-table.expanded-column-3 th:nth-child(3),
+    #homework-table.expanded-column-3 td:nth-child(3),
+    #homework-table.expanded-column-4 th:nth-child(4),
+    #homework-table.expanded-column-4 td:nth-child(4),
+    #homework-table.expanded-column-5 th:nth-child(5),
+    #homework-table.expanded-column-5 td:nth-child(5),
+    #homework-table.expanded-column-6 th:nth-child(6),
+    #homework-table.expanded-column-6 td:nth-child(6),
+    #homework-table.expanded-column-7 th:nth-child(7),
+    #homework-table.expanded-column-7 td:nth-child(7) {
+        width: 55% !important;
+        min-width: 0;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    #homework-table[class*="expanded-column-"] th,
+    #homework-table[class*="expanded-column-"] td {
+        min-width: 0;
+    }
+}
