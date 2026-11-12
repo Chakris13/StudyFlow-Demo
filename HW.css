@@ -1092,3 +1092,17 @@ textarea {
         flex-basis: 100%;
     }
 }
+
+
+/* Preserve intentional line breaks when any column is expanded. */
+#homework-table[class*="expanded-column-"] td:nth-child(1),
+#homework-table[class*="expanded-column-"] td:nth-child(2),
+#homework-table[class*="expanded-column-"] td:nth-child(3),
+#homework-table[class*="expanded-column-"] td:nth-child(4),
+#homework-table[class*="expanded-column-"] td:nth-child(5),
+#homework-table[class*="expanded-column-"] td:nth-child(6),
+#homework-table[class*="expanded-column-"] td:nth-child(7) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
