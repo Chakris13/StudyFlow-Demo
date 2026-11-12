@@ -50,6 +50,13 @@ function renderSortedHomework() {
 
     sorted.forEach((item) => {
         const row = document.createElement('tr');
+        if (item.record_kind !== 'exam') {
+            if (item.submitted) {
+                row.classList.add('homework-row-submitted');
+            } else if (item.completed || item.ready_to_submit) {
+                row.classList.add('homework-row-completed');
+            }
+        }
         [item.hw_name, item.hw_type, item.subject, item.due_date || item.test_date, item.notes].forEach((value) => {
             const cell = document.createElement('td');
             cell.textContent = value || '';
