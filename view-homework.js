@@ -50,9 +50,19 @@ function renderSortedHomework() {
 
     sorted.forEach((item) => {
         const row = document.createElement('tr');
-        [item.hw_name, item.hw_type, item.subject, item.due_date || item.test_date, item.notes].forEach((value) => {
+        [item.hw_name, item.hw_type, item.subject, item.due_date || item.test_date, item.notes].forEach((value, index) => {
             const cell = document.createElement('td');
-            cell.textContent = value || '';
+            let displayValue = value || '';
+
+            // Notes may contain HTML-style <br> tags from older entries.
+            // Convert those tags to real newline characters without rendering HTML.
+            if (index === 4 && displayValue) {
+                displayValue = String(displayValue)
+                    .replace(/<br\\s*\\/?\\s*>/gi, '\\n')
+                    .replace(/\\r\\n?/g, '\\n');
+            }
+
+            cell.textContent = displayValue;
             row.appendChild(cell);
         });
 
