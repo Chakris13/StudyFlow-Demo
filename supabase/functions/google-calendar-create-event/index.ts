@@ -46,7 +46,7 @@ Deno.serve(async (request) => {
     if (homeworkError) throw homeworkError;
     if (!homework) return jsonResponse({ error: "ไม่พบรายการการบ้านของบัญชีนี้" }, 404, origin);
     if (homework.record_kind !== "homework" || !homework.due_date) return jsonResponse({ connected: false, skipped: true, reason: "no_homework_due_date" }, 200, origin);
-    if (homework.calendar_event_id) return jsonResponse({ connected: true, created: false, htmlLink: homework.calendar_event_link }, 200, origin);
+
 
     const { data: storedToken, error: tokenError } = await admin.from("google_calendar_tokens")
       .select("refresh_token_ciphertext, refresh_token_iv").eq("user_id", user.id).maybeSingle();
@@ -79,8 +79,10 @@ Deno.serve(async (request) => {
       end: { date: nextDate(homework.due_date) },
       reminders: { useDefault: true },
     };
-    let response = await fetch(GOOGLE_EVENTS_URL, {
-      method: "POST",
+    const updateExisting = payload.updateExisting === true && Boolean(homework.calendar_event_id);
+    const eventUrl = updateExisting ? GOOGLE_EVENTS_URL + "/" + encodeURIComponent(homework.calendar_event_id) : GOOGLE_EVENTS_URL;
+    let response = await fetch(eventUrl, {
+      method: updateExisting ? "PATCH" : "POST",
       headers: { "Authorization": `Bearer ${accessToken}`, "Content-Type": "application/json" },
       body: JSON.stringify(event),
     });
