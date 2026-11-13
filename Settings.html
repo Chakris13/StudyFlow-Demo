@@ -6,6 +6,7 @@
     <title>StudyFlow</title>
     <script>document.documentElement.classList.add('auth-pending')</script>
     <link rel="stylesheet" href="HW.css">
+    <script src="theme.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="supabase-client.js" defer></script>
     <script src="studyflow-api.js" defer></script>
@@ -27,6 +28,17 @@
 
     <main>
         <h2>ตั้งค่า</h2>
+        <section class="account-card theme-settings-card" aria-labelledby="theme-heading">
+            <h3 id="theme-heading">ธีมสีของ StudyFlow</h3>
+            <label for="theme-select">เลือกธีม</label>
+            <select id="theme-select" name="theme">
+                <option value="default">Default — น้ำเงิน-ม่วง</option>
+                <option value="red-yellow">แดง-เหลือง</option>
+                <option value="green-blue">เขียว-ฟ้า</option>
+                <option value="gray-black">เทา-ดำ</option>
+            </select>
+            <p class="login-hint">ธีมจะถูกบันทึกไว้ในเบราว์เซอร์นี้ และใช้กับทุกหน้าของ StudyFlow</p>
+        </section>
         <section class="account-card calendar-card" aria-labelledby="calendar-heading">
             <h3 id="calendar-heading">Google Calendar</h3>
             <p id="google-calendar-status" role="status" aria-live="polite">กำลังตรวจสอบการเชื่อมต่อ...</p>
