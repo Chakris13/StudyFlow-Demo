@@ -1169,3 +1169,79 @@ textarea {
         min-width: 0;
     }
 }
+
+
+
+/* =========================================================
+   StudyFlow themes
+   The default palette preserves the original blue-purple look.
+   ========================================================= */
+html[data-theme="default"] body,
+html:not([data-theme]) body {
+    background: linear-gradient(135deg, #0f0d59, #3b077e);
+}
+html[data-theme="red-yellow"] body {
+    background: linear-gradient(135deg, #641313 0%, #a52b20 52%, #d18a18 100%);
+}
+html[data-theme="green-blue"] body {
+    background: linear-gradient(135deg, #064b3c 0%, #087b79 52%, #0876a8 100%);
+}
+html[data-theme="gray-black"] body {
+    background: linear-gradient(135deg, #343a40 0%, #171b22 55%, #050608 100%);
+}
+
+html[data-theme="red-yellow"] .navbar,
+html[data-theme="red-yellow"] .navbar ul { background-color: #501414; }
+html[data-theme="red-yellow"] .navbar a:hover { background-color: #873322; }
+html[data-theme="red-yellow"] #homework-table thead th { background-color: #8c3d25; }
+html[data-theme="red-yellow"] .report-summary { background-color: #5b1a13; }
+html[data-theme="red-yellow"] .report-item { background-color: #8f251b; border-color: #681a16; }
+html[data-theme="red-yellow"] .report-item2 { background-color: #a9431c; border-color: #783018; }
+html[data-theme="red-yellow"] .report-item3 { background-color: #bd681b; border-color: #8b4b16; }
+html[data-theme="red-yellow"] .report-item4 { background-color: #d28b1d; border-color: #9d6415; }
+html[data-theme="red-yellow"] #homework-form input[type="submit"],
+html[data-theme="red-yellow"] .login-card button[type="submit"] { background-color: #a52b20; }
+
+html[data-theme="green-blue"] .navbar,
+html[data-theme="green-blue"] .navbar ul { background-color: #073d43; }
+html[data-theme="green-blue"] .navbar a:hover { background-color: #11645f; }
+html[data-theme="green-blue"] #homework-table thead th { background-color: #176b73; }
+html[data-theme="green-blue"] .report-summary { background-color: #064b49; }
+html[data-theme="green-blue"] .report-item { background-color: #08634e; border-color: #064c3e; }
+html[data-theme="green-blue"] .report-item2 { background-color: #08766c; border-color: #07594f; }
+html[data-theme="green-blue"] .report-item3 { background-color: #087c91; border-color: #075c70; }
+html[data-theme="green-blue"] .report-item4 { background-color: #0876a8; border-color: #07577e; }
+html[data-theme="green-blue"] #homework-form input[type="submit"],
+html[data-theme="green-blue"] .login-card button[type="submit"] { background-color: #08766c; }
+
+html[data-theme="gray-black"] .navbar,
+html[data-theme="gray-black"] .navbar ul { background-color: #11151b; }
+html[data-theme="gray-black"] .navbar a:hover { background-color: #343b45; }
+html[data-theme="gray-black"] #homework-table thead th { background-color: #454d58; }
+html[data-theme="gray-black"] .report-summary { background-color: #171b21; }
+html[data-theme="gray-black"] .report-item { background-color: #343a40; border-color: #252a30; }
+html[data-theme="gray-black"] .report-item2 { background-color: #292f36; border-color: #1e2329; }
+html[data-theme="gray-black"] .report-item3 { background-color: #20262d; border-color: #171c22; }
+html[data-theme="gray-black"] .report-item4 { background-color: #151a20; border-color: #0c1015; }
+html[data-theme="gray-black"] #homework-form input[type="submit"],
+html[data-theme="gray-black"] .login-card button[type="submit"] { background-color: #454d58; }
+
+.theme-settings-card {
+    margin-bottom: 18px;
+}
+.theme-settings-card label {
+    display: block;
+    margin: 8px 0;
+    font-weight: 700;
+}
+#theme-select {
+    display: block;
+    width: min(100%, 360px);
+    min-height: 46px;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #fff;
+    color: #202124;
+    font-size: 16px;
+}
