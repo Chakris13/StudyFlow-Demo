@@ -58,8 +58,8 @@ function renderSortedHomework() {
             // Convert those tags to real newline characters without rendering HTML.
             if (index === 4 && displayValue) {
                 displayValue = String(displayValue)
-                    .replace(/<br\\s*\\/?\\s*>/gi, '\\n')
-                    .replace(/\\r\\n?/g, '\\n');
+                    .replace(/<br\s*\/?\s*>/gi, '\n')
+                    .replace(/\r\n?/g, '\n');
             }
 
             cell.textContent = displayValue;
