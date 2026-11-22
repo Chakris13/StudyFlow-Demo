@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ดูการสอบ - StudyFlow</title>
+<script>document.documentElement.classList.add('auth-pending')</script>
+<link rel="stylesheet" href="HW.css">
+<script src="theme.js?v=exam1" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="supabase-client.js" defer></script>
+<script src="studyflow-api.js?v=exam1" defer></script>
+<script src="auth-guard.js" defer></script>
+<script src="view-exams.js?v=exam1" defer></script>
+</head>
+<body>
+<header class="page-header"><h1 id="Header">StudyFlow</h1></header>
+<nav class="navbar"><ul>
+<li><a href="index.html">หน้าหลัก</a></li><li><a href="HW.html">จัดการบ้าน</a></li><li><a href="Settings.html">ตั้งค่า</a></li>
+</ul></nav>
+<nav class="navbar"><ul>
+<li><a href="HW.html">เพิ่มการบ้าน</a></li><li><a href="Score.html">เพิ่มคะแนนสอบ</a></li><li><a href="ViewHW.html">ดูการบ้าน</a></li><li><a href="ViewExam.html" aria-current="page">ดูการสอบ</a></li>
+</ul></nav>
+<main>
+<h2 style="margin-top:0">รายการสอบ</h2>
+<p id="exam-status" role="status" aria-live="polite"></p>
+<div class="homework-table-toolbar">
+<label for="exam-sort">เรียงตาม</label>
+<select id="exam-sort"><option value="date">วันสอบ</option><option value="created">เพิ่มล่าสุด</option><option value="name">ชื่อ</option></select>
+</div>
+<dialog id="edit-exam-dialog" class="edit-homework-dialog">
+<form id="edit-exam-form">
+<h3>แก้ไขข้อมูลสอบ</h3><input type="hidden" id="edit-exam-id">
+<label for="edit-exam-name">ชื่อ</label><input id="edit-exam-name" type="text" required>
+<label for="edit-exam-subject">รายวิชา</label><input id="edit-exam-subject" type="text" required>
+<label for="edit-exam-date">วันสอบ</label><input id="edit-exam-date" type="date">
+<label for="edit-exam-score">คะแนนที่ได้</label><input id="edit-exam-score" type="number" min="0" step="0.01">
+<label for="edit-exam-total">คะแนนเต็ม</label><input id="edit-exam-total" type="number" min="0.01" step="0.01">
+<label for="edit-exam-pass">เกณฑ์ผ่าน</label><input id="edit-exam-pass" type="number" min="0" step="0.01">
+<label for="edit-exam-notes">โน้ตเพิ่มเติม</label><textarea id="edit-exam-notes" rows="4"></textarea>
+<div class="edit-homework-actions"><button type="button" id="cancel-edit-exam">ยกเลิก</button><button type="submit">บันทึกการแก้ไข</button></div>
+</form>
+</dialog>
+<div class="table-container">
+<table id="exam-table"><thead><tr><th>ชื่อ</th><th>รายวิชา</th><th>วันสอบ</th><th>คะแนนที่ได้ / คะแนนเต็ม / เกณฑ์ผ่าน</th><th>โน้ตเพิ่มเติม</th><th>จัดการ</th></tr></thead><tbody id="exam-list"></tbody></table>
+</div>
+</main>
+</body>
+</html>
