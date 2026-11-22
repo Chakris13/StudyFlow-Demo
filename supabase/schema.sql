@@ -13,6 +13,7 @@ create table if not exists public.homework (
     test_date date,
     score numeric(8,2),
     total_score numeric(8,2),
+    passing_score numeric(8,2),
     notes text not null default '',
     created_at timestamptz not null default now(),
     completed boolean not null default false,
@@ -22,6 +23,7 @@ create table if not exists public.homework (
     submitted_at timestamptz,
     constraint homework_score_nonnegative check (score is null or score >= 0),
     constraint homework_total_score_positive check (total_score is null or total_score > 0),
+    constraint homework_passing_score_nonnegative check (passing_score is null or passing_score >= 0),
     constraint homework_score_within_total check (score is null or total_score is null or score <= total_score)
 );
 
