@@ -7,7 +7,7 @@ scoreForm?.addEventListener('submit', async (event) => {
     if (status) status.textContent = 'กำลังบันทึก...';
     const form = new FormData(scoreForm);
     try {
-        await window.StudyFlowAPI.addHomework({
+        const result = await window.StudyFlowAPI.addHomework({
             record_kind: 'exam',
             hw_name: form.get('hw_name'),
             hw_type: form.get('hw_type'),
@@ -18,7 +18,9 @@ scoreForm?.addEventListener('submit', async (event) => {
             passing_score: form.get('passing_score'),
             notes: form.get('notes')
         });
-        window.location.replace('ViewExam.html?saved=1');
+        const params = new URLSearchParams({ saved: '1', calendar: result.calendarSync || 'not_applicable' });
+        if (result.calendarMessage) params.set('calendar_message', result.calendarMessage);
+        window.location.replace('ViewExam.html?' + params.toString());
     } catch (error) {
         if (status) status.textContent = error.message;
         else alert(error.message);
