@@ -4,6 +4,7 @@ const examSort = document.getElementById('exam-sort');
 const editDialog = document.getElementById('edit-exam-dialog');
 const editForm = document.getElementById('edit-exam-form');
 let exams = [];
+const savedParams = new URLSearchParams(window.location.search);
 
 function formatExamDate(value) {
     if (!value) return '-';
@@ -71,7 +72,15 @@ async function removeExam(exam) {
     examStatus.textContent = 'กำลังลบข้อมูล...';
     try {
         const warning = await window.StudyFlowAPI.deleteExam(exam.id);
-        await loadExams();
+        await loadExams().then(() => {
+    if (!savedParams.has('saved')) return;
+    const calendar = savedParams.get('calendar');
+    if (calendar === 'created') examStatus.textContent = 'บันทึกข้อมูลสอบแล้ว และเพิ่มวันสอบลง Google Calendar เรียบร้อย';
+    else if (calendar === 'failed') examStatus.textContent = 'บันทึกข้อมูลสอบแล้ว แต่เพิ่มลง Google Calendar ไม่สำเร็จ: ' + (savedParams.get('calendar_message') || 'กรุณาตรวจสอบการเชื่อมต่อ');
+    else if (calendar === 'not_connected') examStatus.textContent = 'บันทึกข้อมูลสอบแล้ว แต่ยังไม่ได้เชื่อม Google Calendar';
+    else examStatus.textContent = 'บันทึกข้อมูลสอบเรียบร้อยแล้ว';
+    history.replaceState({}, '', location.pathname);
+});
         examStatus.textContent = 'ลบข้อมูลสอบเรียบร้อยแล้ว' + (warning || '');
     } catch (error) {
         examStatus.textContent = error.message || 'ลบข้อมูลสอบไม่สำเร็จ';
