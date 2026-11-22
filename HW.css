@@ -1416,3 +1416,125 @@ html[data-theme="green-blue"] #homework-form input[type="submit"] {
 html[data-theme="gray-black"] #homework-form input[type="submit"] {
     background: #454d58;
 }
+
+
+/* Exam table: same expand, desktop and responsive-card behavior as ViewHW. */
+#exam-table {
+    width: 100%;
+    min-width: 760px;
+    table-layout: fixed;
+}
+#exam-table th,
+#exam-table td {
+    box-sizing: border-box;
+    padding: clamp(8px, 0.8vw, 13px);
+    line-height: 1.45;
+    vertical-align: middle;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+#exam-table th:nth-child(1), #exam-table td:nth-child(1) { width: 20%; }
+#exam-table th:nth-child(2), #exam-table td:nth-child(2) { width: 15%; }
+#exam-table th:nth-child(3), #exam-table td:nth-child(3) { width: 14%; }
+#exam-table th:nth-child(4), #exam-table td:nth-child(4) { width: 19%; }
+#exam-table th:nth-child(5), #exam-table td:nth-child(5) { width: 20%; white-space: pre-wrap; }
+#exam-table th:nth-child(6), #exam-table td:nth-child(6) { width: 12%; }
+#exam-table thead th {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .15s ease;
+}
+#exam-table thead th:hover,
+#exam-table thead th:focus-visible {
+    background: #6541a5;
+    outline: 2px solid #c4b5fd;
+    outline-offset: -2px;
+}
+#exam-table thead th::after {
+    content: " ↔";
+    opacity: .55;
+    font-size: .8em;
+}
+#exam-table[class*="expanded-column-"] { table-layout: fixed; }
+#exam-table.expanded-column-1 th:nth-child(1), #exam-table.expanded-column-1 td:nth-child(1),
+#exam-table.expanded-column-2 th:nth-child(2), #exam-table.expanded-column-2 td:nth-child(2),
+#exam-table.expanded-column-3 th:nth-child(3), #exam-table.expanded-column-3 td:nth-child(3),
+#exam-table.expanded-column-4 th:nth-child(4), #exam-table.expanded-column-4 td:nth-child(4),
+#exam-table.expanded-column-5 th:nth-child(5), #exam-table.expanded-column-5 td:nth-child(5),
+#exam-table.expanded-column-6 th:nth-child(6), #exam-table.expanded-column-6 td:nth-child(6) {
+    width: 55% !important;
+    min-width: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+#exam-table[class*="expanded-column-"] th,
+#exam-table[class*="expanded-column-"] td {
+    min-width: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+@media (min-width: 901px) {
+    #exam-table { min-width: 0; width: 100%; }
+}
+@media (max-width: 900px) {
+    #exam-table,
+    #exam-table tbody {
+        display: block;
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        background: transparent;
+    }
+    #exam-table thead { display: none; }
+    #exam-table tbody tr {
+        display: block;
+        margin: 0 0 16px;
+        overflow: hidden;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #fff;
+        color: #222;
+        box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    #exam-table tbody td {
+        display: grid;
+        grid-template-columns: minmax(100px, 28%) minmax(0, 1fr);
+        gap: 10px;
+        width: 100% !important;
+        padding: 12px 14px;
+        border: 0;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 1rem;
+        text-align: left;
+    }
+    #exam-table tbody td::before {
+        font-weight: 700;
+        color: #334155;
+    }
+    #exam-table tbody td:nth-child(1)::before { content: "ชื่อ"; }
+    #exam-table tbody td:nth-child(2)::before { content: "รายวิชา"; }
+    #exam-table tbody td:nth-child(3)::before { content: "วันสอบ"; }
+    #exam-table tbody td:nth-child(4)::before { content: "คะแนน / เต็ม / ผ่าน"; }
+    #exam-table tbody td:nth-child(5)::before { content: "โน้ต"; }
+    #exam-table tbody td:nth-child(6)::before { content: "จัดการ"; }
+    #exam-table tbody td:last-child { border-bottom: 0; }
+    #exam-table .homework-actions {
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+    #exam-table .homework-actions button {
+        flex: 1 1 100px;
+        min-height: 44px;
+        margin: 0;
+    }
+}
+@media (max-width: 380px) {
+    #exam-table tbody td {
+        grid-template-columns: minmax(82px, 30%) minmax(0, 1fr);
+        gap: 7px;
+        padding: 9px;
+        font-size: .9rem;
+    }
+}
