@@ -40,7 +40,7 @@
             test_date: values.test_date || null,
             score: values.score === '' || values.score == null ? null : Number(values.score),
             total_score: values.total_score === '' || values.total_score == null ? null : Number(values.total_score),
-            passing_score: values.passing_score === '' || values.passing_score == null ? null : Number(values.passing_score),
+            ...(values.record_kind === 'exam' ? { passing_score: values.passing_score === '' || values.passing_score == null ? null : Number(values.passing_score) } : {}),
             notes: String(values.notes || '').trim()
         };
         if (!row.hw_name || !row.hw_type || !row.subject) {
@@ -138,9 +138,9 @@
         if (existing.record_kind !== 'exam') throw new Error('รายการนี้ไม่ใช่การสอบ');
         const { error: updateError } = await client.from('homework').update(patch).eq('id', id).eq('user_id', user.id);
         throwIfError(updateError);
-        if (existing.calendar_event_id && patch.test_date && !user.is_anonymous) {
+        if (patch.test_date && !user.is_anonymous) {
             const { error: syncError } = await client.functions.invoke('google-calendar-create-event', {
-                body: { homeworkId: id, updateExisting: true }
+                body: { homeworkId: id, updateExisting: Boolean(existing.calendar_event_id) }
             });
             if (syncError) {
                 let detail = syncError.message || 'Google Calendar sync failed';
