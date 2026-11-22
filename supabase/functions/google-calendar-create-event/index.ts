@@ -45,7 +45,8 @@ Deno.serve(async (request) => {
       .eq("id", homeworkId).eq("user_id", user.id).maybeSingle();
     if (homeworkError) throw homeworkError;
     if (!homework) return jsonResponse({ error: "ไม่พบรายการการบ้านของบัญชีนี้" }, 404, origin);
-    if (homework.record_kind !== "homework" || !homework.due_date) return jsonResponse({ connected: false, skipped: true, reason: "no_homework_due_date" }, 200, origin);
+    const eventDate = homework.record_kind === "exam" ? homework.test_date : homework.due_date;
+    if (!eventDate) return jsonResponse({ connected: false, skipped: true, reason: "no_event_date" }, 200, origin);
 
 
     const { data: storedToken, error: tokenError } = await admin.from("google_calendar_tokens")
@@ -67,19 +68,32 @@ Deno.serve(async (request) => {
     const event = {
       id: eventId,
       ...(requestedColorId ? { colorId: requestedColorId } : {}),
-      summary: `StudyFlow: ${homework.hw_name} — ${homework.subject}`,
+      summary: homework.record_kind === "exam" ? `สอบ: ${homework.hw_name} — ${homework.subject}` : `StudyFlow: ${homework.hw_name} — ${homework.subject}`,
       description: [
-        `ประเภท: ${homework.hw_type}`,
+        homework.record_kind === "exam" ? "ประเภท: การสอบ" : `ประเภท: ${homework.hw_type}`,
         `วิชา: ${homework.subject}`,
+        homework.record_kind === "exam" ? `คะแนน: ${homework.score ?? "-"} / ${homework.total_score ?? "-"}` : "",
+        homework.record_kind === "exam" ? `เกณฑ์ผ่าน: ${homework.passing_score ?? "-"}` : "",
         homework.notes ? `รายละเอียด: ${homework.notes}` : "",
         "เพิ่มจาก StudyFlow",
         "https://chakris13.github.io/StudyFlow-Demo/",
       ].filter(Boolean).join("\n"),
-      start: { date: homework.due_date },
-      end: { date: nextDate(homework.due_date) },
+      start: { date: eventDate },
+      end: { date: nextDate(eventDate) },
       reminders: { useDefault: true },
     };
     const updateExisting = payload.updateExisting === true && Boolean(homework.calendar_event_id);
+    const deleteExisting = payload.action === "delete" && Boolean(homework.calendar_event_id);
+    if (deleteExisting) {
+      const deleteResponse = await fetch(`${GOOGLE_EVENTS_URL}/${encodeURIComponent(homework.calendar_event_id)}`, {
+        method: "DELETE", headers: { "Authorization": `Bearer ${accessToken}` },
+      });
+      if (!deleteResponse.ok && deleteResponse.status !== 404 && deleteResponse.status !== 410) {
+        const deleteData = await deleteResponse.json().catch(() => ({}));
+        throw new Error(deleteData.error?.message || "ไม่สามารถลบกิจกรรมใน Google Calendar ได้");
+      }
+      return jsonResponse({ connected: true, deleted: true }, 200, origin);
+    }
     const eventUrl = updateExisting ? GOOGLE_EVENTS_URL + "/" + encodeURIComponent(homework.calendar_event_id) : GOOGLE_EVENTS_URL;
     let response = await fetch(eventUrl, {
       method: updateExisting ? "PATCH" : "POST",
