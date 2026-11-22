@@ -40,6 +40,7 @@
             test_date: values.test_date || null,
             score: values.score === '' || values.score == null ? null : Number(values.score),
             total_score: values.total_score === '' || values.total_score == null ? null : Number(values.total_score),
+            passing_score: values.passing_score === '' || values.passing_score == null ? null : Number(values.passing_score),
             notes: String(values.notes || '').trim()
         };
         if (!row.hw_name || !row.hw_type || !row.subject) {
@@ -54,7 +55,7 @@
 
         let calendarSync = 'not_applicable';
         let calendarMessage = '';
-        if (row.record_kind === 'homework' && row.due_date) {
+        if ((row.record_kind === 'homework' && row.due_date) || (row.record_kind === 'exam' && row.test_date)) {
             if (user.is_anonymous) {
                 calendarSync = 'not_connected';
             } else {
@@ -118,6 +119,55 @@
         }
     }
 
+    async function editExam(id, values) {
+        const user = await currentUser();
+        const patch = {
+            hw_name: String(values.hw_name || '').trim(),
+            subject: String(values.subject || '').trim(),
+            test_date: values.test_date || null,
+            score: values.score === '' || values.score == null ? null : Number(values.score),
+            total_score: values.total_score === '' || values.total_score == null ? null : Number(values.total_score),
+            passing_score: values.passing_score === '' || values.passing_score == null ? null : Number(values.passing_score),
+            notes: String(values.notes || '').trim()
+        };
+        if (!patch.hw_name || !patch.subject) throw new Error('กรุณากรอกชื่อการสอบและรายวิชา');
+        if (patch.score != null && patch.total_score != null && patch.score > patch.total_score) throw new Error('คะแนนที่ได้ต้องไม่เกินคะแนนเต็ม');
+        const { data: existing, error: readError } = await client.from('homework')
+            .select('id, record_kind, calendar_event_id').eq('id', id).eq('user_id', user.id).single();
+        throwIfError(readError);
+        if (existing.record_kind !== 'exam') throw new Error('รายการนี้ไม่ใช่การสอบ');
+        const { error: updateError } = await client.from('homework').update(patch).eq('id', id).eq('user_id', user.id);
+        throwIfError(updateError);
+        if (existing.calendar_event_id && patch.test_date && !user.is_anonymous) {
+            const { error: syncError } = await client.functions.invoke('google-calendar-create-event', {
+                body: { homeworkId: id, updateExisting: true }
+            });
+            if (syncError) {
+                let detail = syncError.message || 'Google Calendar sync failed';
+                try { const body = await syncError.context?.json(); if (body?.error) detail = body.error; } catch {}
+                throw new Error('แก้ไขข้อมูลสอบแล้ว แต่ปรับปรุง Google Calendar ไม่สำเร็จ: ' + detail);
+            }
+        }
+    }
+
+    async function deleteExam(id) {
+        const user = await currentUser();
+        const { data: existing, error: readError } = await client.from('homework')
+            .select('id, record_kind, calendar_event_id').eq('id', id).eq('user_id', user.id).single();
+        throwIfError(readError);
+        if (existing.record_kind !== 'exam') throw new Error('รายการนี้ไม่ใช่การสอบ');
+        let calendarWarning = '';
+        if (existing.calendar_event_id && !user.is_anonymous) {
+            const { error: calendarError } = await client.functions.invoke('google-calendar-create-event', {
+                body: { homeworkId: id, action: 'delete' }
+            });
+            if (calendarError) calendarWarning = ' (ลบข้อมูลใน StudyFlow แล้ว แต่ลบกิจกรรมใน Google Calendar ไม่สำเร็จ)';
+        }
+        const { error: deleteError } = await client.from('homework').delete().eq('id', id).eq('user_id', user.id);
+        throwIfError(deleteError);
+        return calendarWarning;
+    }
+
     async function updateHomework(id, action) {
         await currentUser();
         if (action === 'delete_homework') {
@@ -164,6 +214,8 @@
         loadProfile,
         addHomework,
         editHomework,
+        editExam,
+        deleteExam,
         updateHomework,
         saveSettings
     };
