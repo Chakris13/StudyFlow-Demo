@@ -15,9 +15,10 @@ scoreForm?.addEventListener('submit', async (event) => {
             test_date: form.get('test_date'),
             score: form.get('score'),
             total_score: form.get('total_score'),
+            passing_score: form.get('passing_score'),
             notes: form.get('notes')
         });
-        window.location.replace('ViewHW.html?saved=1');
+        window.location.replace('ViewExam.html?saved=1');
     } catch (error) {
         if (status) status.textContent = error.message;
         else alert(error.message);
