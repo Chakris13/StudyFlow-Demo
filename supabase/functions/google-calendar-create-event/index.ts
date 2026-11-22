@@ -41,7 +41,7 @@ Deno.serve(async (request) => {
     if (!homeworkId || !/^[0-9a-f-]{36}$/i.test(homeworkId)) return jsonResponse({ error: "homeworkId ไม่ถูกต้อง" }, 400, origin);
 
     const { data: homework, error: homeworkError } = await admin.from("homework")
-      .select("id, user_id, record_kind, hw_name, hw_type, subject, due_date, notes, calendar_event_id, calendar_event_link")
+      .select("id, user_id, record_kind, hw_name, hw_type, subject, due_date, test_date, score, total_score, passing_score, notes, calendar_event_id, calendar_event_link")
       .eq("id", homeworkId).eq("user_id", user.id).maybeSingle();
     if (homeworkError) throw homeworkError;
     if (!homework) return jsonResponse({ error: "ไม่พบรายการการบ้านของบัญชีนี้" }, 404, origin);
